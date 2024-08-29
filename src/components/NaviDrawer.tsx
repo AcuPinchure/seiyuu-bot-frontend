@@ -10,6 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  CaretLeft,
+  CaretRight,
   ChartLine,
   Clock,
   FadersHorizontal,
@@ -18,6 +20,7 @@ import {
   SignIn,
   SignOut,
 } from "@phosphor-icons/react";
+import ThemeModeSwitcher from "./ThemeModeSwitcher";
 
 interface NaviDrawerProps {
   open: boolean;
@@ -72,11 +75,11 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
     <nav aria-label="navigation menu">
       <List
         sx={{
-          width: "12rem",
+          width: "13rem",
         }}
       >
         <ListItem disableGutters disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={isMobile ? undefined : () => setOpen(!open)}>
             <Stack
               height={32}
               overflow={"hidden"}
@@ -87,13 +90,13 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
                 <img
                   src="/bot_logo.svg"
                   alt="Lovelive Seiyuu Bot"
-                  height={42}
+                  height={40}
                 />
               ) : (
                 <img
                   src="/bot_L_logo.svg"
                   alt="Lovelive Seiyuu Bot"
-                  height={30}
+                  height={28}
                 />
               )}
             </Stack>
@@ -109,7 +112,7 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
                     direction="row"
                     spacing={2}
                     alignItems={"center"}
-                    height={36}
+                    height={52}
                   >
                     {item.icon}
                     {(isMobile || open) && (
@@ -120,6 +123,11 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
               </ListItem>
             );
           })}
+        <ListItem disableGutters disablePadding>
+          <Box ml={"0.3rem"} height={52} py={1}>
+            <ThemeModeSwitcher />
+          </Box>
+        </ListItem>
       </List>
     </nav>
   );
@@ -153,8 +161,31 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
         overflowX: "hidden",
         overflowY: "auto",
       }}
-      width={open ? "12rem" : "3.5rem"}
+      width={open ? "13rem" : "3.5rem"}
     >
+      {open ? (
+        <CaretLeft
+          size={20}
+          weight="bold"
+          style={{
+            position: "absolute",
+            right: 2,
+            top: 20,
+            margin: "auto",
+          }}
+        />
+      ) : (
+        <CaretRight
+          size={20}
+          weight="bold"
+          style={{
+            position: "absolute",
+            right: 2,
+            top: 20,
+            margin: "auto",
+          }}
+        />
+      )}
       {drawerContent}
     </Box>
   );

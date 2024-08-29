@@ -1,12 +1,14 @@
-import { CssBaseline } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import Layout from "./components/Layout";
+import theme from "./styles/theme";
 
 function App() {
   return (
-    <>
-      <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <InitColorSchemeScript attribute="class" />
       <Layout />
-    </>
+    </ThemeProvider>
   );
 }
 
