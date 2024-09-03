@@ -18,6 +18,7 @@ import {
   SignOut,
 } from "@phosphor-icons/react";
 import ThemeModeSwitcher from "./ThemeModeSwitcher";
+import { Link } from "react-router-dom";
 
 interface NaviDrawerProps {
   open: boolean;
@@ -33,36 +34,43 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
       icon: <ChartLine weight="bold" size={20} />,
       text: "Statistics",
       loginOnly: false,
+      href: "/",
     },
     {
       icon: <Gauge weight="bold" size={20} />,
       text: "Service Status",
       loginOnly: false,
+      href: "/status",
     },
     {
       icon: <FadersHorizontal weight="bold" size={20} />,
       text: "Service Config",
       loginOnly: true,
+      href: "/config",
     },
     {
       icon: <Images weight="bold" size={20} />,
       text: "Image Library",
       loginOnly: true,
+      href: "/library",
     },
     {
       icon: <Clock weight="bold" size={20} />,
       text: "Logs",
       loginOnly: true,
+      href: "/logs",
     },
     {
       icon: <SignIn weight="bold" size={20} />,
       text: "Login",
       loginOnly: false,
+      href: "/login",
     },
     {
       icon: <SignOut weight="bold" size={20} />,
       text: "Logout",
       loginOnly: true,
+      href: "/logout",
     },
   ] as const;
 
@@ -102,7 +110,7 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
           .map((item) => {
             return (
               <ListItem key={item.text} disableGutters disablePadding>
-                <ListItemButton>
+                <ListItemButton component={Link} to={item.href}>
                   <Stack
                     direction="row"
                     spacing={2}
