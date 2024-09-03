@@ -3,14 +3,11 @@ import {
   ListItem,
   ListItemButton,
   SwipeableDrawer,
-  useMediaQuery,
-  useTheme,
   Box,
   Stack,
   Typography,
 } from "@mui/material";
 import {
-  CaretLeft,
   CaretRight,
   ChartLine,
   Clock,
@@ -25,12 +22,10 @@ import ThemeModeSwitcher from "./ThemeModeSwitcher";
 interface NaviDrawerProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  isMobile: boolean;
 }
 
-const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
+const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
   const isAuth = true;
 
   const naviItems = [
@@ -75,7 +70,7 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
     <nav aria-label="navigation menu">
       <List
         sx={{
-          width: "13rem",
+          width: "12rem",
         }}
       >
         <ListItem disableGutters disablePadding>
@@ -90,13 +85,13 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
                 <img
                   src="/bot_logo.svg"
                   alt="Lovelive Seiyuu Bot"
-                  height={40}
+                  height={32}
                 />
               ) : (
                 <img
                   src="/bot_L_logo.svg"
                   alt="Lovelive Seiyuu Bot"
-                  height={28}
+                  height={32}
                 />
               )}
             </Stack>
@@ -152,7 +147,6 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
       position={"fixed"}
       top={0}
       left={0}
-      border={"1px solid black"}
       height={"100vh"}
       bgcolor={"primary.main"}
       color={"primary.contrastText"}
@@ -161,31 +155,19 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen }) => {
         overflowX: "hidden",
         overflowY: "auto",
       }}
-      width={open ? "13rem" : "3.5rem"}
+      width={open ? "12rem" : "3.5rem"}
     >
-      {open ? (
-        <CaretLeft
-          size={20}
-          weight="bold"
-          style={{
-            position: "absolute",
-            right: 2,
-            top: 20,
-            margin: "auto",
-          }}
-        />
-      ) : (
-        <CaretRight
-          size={20}
-          weight="bold"
-          style={{
-            position: "absolute",
-            right: 2,
-            top: 20,
-            margin: "auto",
-          }}
-        />
-      )}
+      <CaretRight
+        size={20}
+        weight="bold"
+        style={{
+          position: "absolute",
+          right: 2,
+          top: 20,
+          margin: "auto",
+          transform: `rotate(${open ? 180 : 0}deg)`,
+        }}
+      />
       {drawerContent}
     </Box>
   );
