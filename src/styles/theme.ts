@@ -27,10 +27,11 @@ const theme = createTheme({
     dark: {
       palette: {
         primary: {
-          main: "#1b0938",
+          main: "#66a64e",
+          contrastText: "#fff",
         },
         secondary: {
-          main: "#3f8823",
+          main: "#230b4a",
         },
         background: {
           default: "#020202",
@@ -107,6 +108,56 @@ const theme = createTheme({
         root: {
           textTransform: "none",
         },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          width: 48,
+          height: 28,
+          padding: 2,
+          "& .MuiSwitch-switchBase": {
+            padding: 4,
+            color: "#9D9CA5",
+            margin: 1,
+            transitionDuration: "300ms",
+            "&.Mui-checked": {
+              transform: "translateX(19px)",
+              color: theme.palette.success.dark,
+              "& + .MuiSwitch-track": {
+                backgroundColor: theme.palette.success.light,
+                opacity: 1,
+                border: "1px solid #13566D",
+              },
+              "&.Mui-disabled + .MuiSwitch-track": {
+                opacity: 0.5,
+              },
+            },
+            "&.Mui-focusVisible .MuiSwitch-thumb": {
+              color: "#33cf4d",
+              border: "6px solid #f2f2f3",
+            },
+            "&.Mui-disabled .MuiSwitch-thumb": {
+              opacity: 0.4,
+            },
+            "&.Mui-disabled + .MuiSwitch-track": {
+              opacity: 0.4,
+            },
+          },
+          "& .MuiSwitch-thumb": {
+            boxSizing: "border-box",
+            width: 18,
+            height: 18,
+            boxShadow: "none",
+          },
+          "& .MuiSwitch-track": {
+            borderRadius: 26 / 2,
+            backgroundColor: theme.palette.background.default,
+            opacity: 1,
+            transition: `background-color 500ms`,
+            border: "1px solid #D2D1D6",
+          },
+        }),
       },
     },
   },

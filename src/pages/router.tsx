@@ -10,7 +10,6 @@ const Stats = lazy(() => import("./Stats"));
 const Status = lazy(() => import("./Status"));
 const Login = lazy(() => import("./Login"));
 const Library = lazy(() => import("./Library"));
-const Config = lazy(() => import("./Config"));
 const Logs = lazy(() => import("./Logs"));
 
 const router = createBrowserRouter([
@@ -53,16 +52,12 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "config",
+        path: "logs",
         element: (
           <SuspenseWrapper>
-            <Config />
+            <Logs />
           </SuspenseWrapper>
         ),
-      },
-      {
-        path: "logs",
-        element: <Logs />,
       },
       {
         path: "logout",

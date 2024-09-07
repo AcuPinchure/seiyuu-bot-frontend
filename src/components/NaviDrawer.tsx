@@ -6,12 +6,12 @@ import {
   Box,
   Stack,
   Typography,
+  useTheme,
 } from "@mui/material";
 import {
   CaretRight,
   ChartLine,
   Clock,
-  FadersHorizontal,
   Gauge,
   Images,
   SignIn,
@@ -29,47 +29,50 @@ interface NaviDrawerProps {
 const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
   const isAuth = true;
 
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
+
   const naviItems = [
     {
       icon: <ChartLine weight="bold" size={20} />,
       text: "Statistics",
-      loginOnly: false,
+      showInLogout: true,
+      showInLogin: true,
       href: "/",
     },
     {
       icon: <Gauge weight="bold" size={20} />,
       text: "Service Status",
-      loginOnly: false,
+      showInLogout: true,
+      showInLogin: true,
       href: "/status",
-    },
-    {
-      icon: <FadersHorizontal weight="bold" size={20} />,
-      text: "Service Config",
-      loginOnly: true,
-      href: "/config",
     },
     {
       icon: <Images weight="bold" size={20} />,
       text: "Image Library",
-      loginOnly: true,
+      showInLogout: false,
+      showInLogin: true,
       href: "/library",
     },
     {
       icon: <Clock weight="bold" size={20} />,
       text: "Logs",
-      loginOnly: true,
+      showInLogout: false,
+      showInLogin: true,
       href: "/logs",
     },
     {
       icon: <SignIn weight="bold" size={20} />,
-      text: "Login",
-      loginOnly: false,
+      text: "Admin Login",
+      showInLogout: true,
+      showInLogin: false,
       href: "/login",
     },
     {
       icon: <SignOut weight="bold" size={20} />,
       text: "Logout",
-      loginOnly: true,
+      showInLogout: false,
+      showInLogin: true,
       href: "/logout",
     },
   ] as const;
@@ -83,30 +86,31 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
       >
         <ListItem disableGutters disablePadding>
           <ListItemButton onClick={isMobile ? undefined : () => setOpen(!open)}>
-            <Stack
-              height={32}
-              overflow={"hidden"}
-              direction={"row"}
-              alignItems={"center"}
-            >
-              {isMobile || open ? (
+            <Box height={32} position={"relative"}>
+              {(isMobile || open) && (
                 <img
                   src="/bot_logo.svg"
                   alt="Lovelive Seiyuu Bot"
                   height={32}
-                />
-              ) : (
-                <img
-                  src="/bot_L_logo.svg"
-                  alt="Lovelive Seiyuu Bot"
-                  height={32}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    filter: isDark ? undefined : "invert(1)",
+                  }}
                 />
               )}
-            </Stack>
+              <img
+                src="/bot_L_logo.svg"
+                alt="Lovelive Seiyuu Bot"
+                height={32}
+                style={{ position: "absolute", top: 0, left: 0, zIndex: 1 }}
+              />
+            </Box>
           </ListItemButton>
         </ListItem>
         {naviItems
-          .filter((item) => isAuth || !item.loginOnly)
+          .filter((item) => (isAuth ? item.showInLogin : item.showInLogout))
           .map((item) => {
             return (
               <ListItem key={item.text} disableGutters disablePadding>
@@ -143,8 +147,8 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
       anchor="left"
       PaperProps={{
         sx: {
-          bgcolor: "primary.main",
-          color: "primary.contrastText",
+          bgcolor: "secondary.main",
+          color: "secondary.contrastText",
         },
       }}
     >
@@ -156,8 +160,8 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
       top={0}
       left={0}
       height={"100vh"}
-      bgcolor={"primary.main"}
-      color={"primary.contrastText"}
+      bgcolor={"secondary.main"}
+      color={"secondary.contrastText"}
       sx={{
         transition: "width 0.25s",
         overflowX: "hidden",

@@ -78,6 +78,7 @@ const DateOptions: React.FC<DateOptionsProps> = ({
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isDark = theme.palette.mode === "dark";
 
   const selectedRange = {
     startDate: dateRange.start_date
@@ -147,7 +148,7 @@ const DateOptions: React.FC<DateOptionsProps> = ({
             {`
               .rdrDateRangePickerWrapper {
                 flex-direction: ${isMobile ? "column" : "row"};
-                ${isMobile ? "filter: invert(0.85)" : ""};
+                ${isDark ? "filter: invert(0.85)" : ""};
               }
               .rdrDefinedRangesWrapper {
                 width: ${isMobile ? "100%" : "auto"};

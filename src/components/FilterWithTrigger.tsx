@@ -1,4 +1,4 @@
-import { Button, Popover } from "@mui/material";
+import { Box, Button, Popover } from "@mui/material";
 import type { ButtonProps } from "@mui/material";
 import { useState } from "react";
 
@@ -27,7 +27,7 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
   const id = open ? "filter-options" : undefined;
 
   return (
-    <>
+    <Box mb={2}>
       <Button
         size="small"
         aria-describedby={id}
@@ -58,7 +58,7 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
       >
         {children}
       </Popover>
-    </>
+    </Box>
   );
 };
 

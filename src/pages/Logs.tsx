@@ -1,5 +1,5 @@
 const Logs: React.FC = () => {
-  return <>Logs</>;
+  return <>Logs work in progress...</>;
 };
 
 export default Logs;

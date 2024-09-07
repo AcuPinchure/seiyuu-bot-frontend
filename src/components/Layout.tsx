@@ -22,7 +22,7 @@ const Layout: React.FC = () => {
       >
         <Container maxWidth="xl">
           <TopBar setNaviOpen={setDrawerOpen} isMobile={isMobile} />
-          <Box py={2} px={isMobile ? 0 : 2}>
+          <Box mt={1}>
             <Outlet />
           </Box>
         </Container>
