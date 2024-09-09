@@ -12,7 +12,7 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { Check, PencilSimple, TwitterLogo } from "@phosphor-icons/react";
+import { Check, PencilSimple, TwitterLogo, X } from "@phosphor-icons/react";
 import { useState } from "react";
 
 interface StatusCardProps {
@@ -60,8 +60,9 @@ const StatusCard: React.FC<StatusCardProps> = ({
           <Chip
             label={isActive ? "Online" : "Offline"}
             color={isActive ? "success" : "error"}
-            icon={isActive ? <Check /> : <TwitterLogo />}
+            icon={isActive ? <Check /> : <X />}
             size="small"
+            sx={{ px: 0.5 }}
           />
           <Collapse in={edit} orientation="horizontal" timeout={200}>
             <Switch
@@ -107,7 +108,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
   ];
 
   return (
-    <Card variant="outlined" sx={{ width: 400, m: 1 }}>
+    <Card variant="outlined">
       <CardActionArea
         href={`https://twitter.com/${screenName}`}
         target="_blank"

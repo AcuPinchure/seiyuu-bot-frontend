@@ -1,18 +1,26 @@
 import {
+  Box,
   Button,
-  Collapse,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   OutlinedInput,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import type { ImageCardProps } from "./ImageCard";
-import { title } from "process";
 import { useState } from "react";
+import { PencilSimple } from "@phosphor-icons/react";
 
 interface ImageDetailModalProps {
   open: boolean;
@@ -34,7 +42,8 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
   onClose,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery("(max-width: 500px)");
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   const [edit, setEdit] = useState(false);
   const [editWeight, setEditWeight] = useState(weight);
@@ -93,32 +102,45 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
     >
       <DialogTitle>{fileName}</DialogTitle>
       <DialogContent>
-        <Stack direction={isMobile ? "column" : "row"}>
-          <img src={`/file/${fileID}`} alt={fileName} />
-          <Stack direction={"column"}>
-            <table>
-              <thead>
-                {tableContent.map((row) => (
-                  <tr>
-                    <td>
-                      <Typography variant="body1" fontWeight={500}>
-                        {row.title}
-                      </Typography>
-                    </td>
-                    <td>
-                      <Typography variant="body1">{row.value}</Typography>
-                    </td>
-                  </tr>
-                ))}
-              </thead>
-            </table>
-            <Stack direction={"row"} spacing={1} alignItems={"center"}>
-              <Typography variant="body1" fontWeight={500}>
-                Weight
-              </Typography>
-              <Typography variant="body1">{weight}</Typography>
-              <Collapse in={edit} orientation="horizontal" timeout={200}>
-                <Stack direction={"column"} alignItems={"flex-start"}>
+        <Stack direction={"column"} spacing={2}>
+          <Stack direction={isTablet ? "column" : "row"}>
+            <Box flex={1}>
+              <img src={`/file/${fileID}`} alt={fileName} />
+            </Box>
+            <Stack direction={"column"} spacing={2}>
+              <table>
+                <tbody>
+                  {tableContent.map((row) =>
+                    isMobile ? (
+                      <tr>
+                        <td>
+                          <Typography variant="body1" fontWeight={500} mt={1}>
+                            {row.title}
+                          </Typography>
+                          <Typography variant="body1">{row.value}</Typography>
+                        </td>
+                      </tr>
+                    ) : (
+                      <tr>
+                        <td style={{ width: "8rem" }}>
+                          <Typography variant="body1" fontWeight={500} my={0.5}>
+                            {row.title}
+                          </Typography>
+                        </td>
+                        <td>
+                          <Typography variant="body1">{row.value}</Typography>
+                        </td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+              <Divider flexItem />
+              <Stack direction={"column"}>
+                <Stack direction={"row"} spacing={2} alignItems={"center"}>
+                  <Typography variant="body1" fontWeight={500}>
+                    Weight
+                  </Typography>
                   <OutlinedInput
                     value={editWeight.toString()}
                     onChange={(e) => setEditWeight(parseInt(e.target.value))}
@@ -126,41 +148,88 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
                     inputProps={{ min: 0, max: 100 }}
                     size="small"
                     sx={{ width: "6rem" }}
+                    disabled={!edit}
                   />
-                  <Typography variant="body2" sx={{ opacity: 0.6 }}>
-                    Chance of picked:{" "}
-                    {((editWeight / totalWeight) * 100).toFixed(4)}%
-                  </Typography>
                 </Stack>
-              </Collapse>
-            </Stack>
-
-            {edit ? (
-              <Stack direction={"row"} spacing={1} alignItems={"center"}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={editWeight === weight}
-                  onClick={handleSave}
-                >
-                  Save
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
+                <Typography variant="body2" sx={{ opacity: 0.6 }}>
+                  Chance of picked:{" "}
+                  {((editWeight / totalWeight) * 100).toFixed(4)}%
+                </Typography>
               </Stack>
-            ) : (
-              <Button variant="contained" color="primary" onClick={handleEdit}>
-                Edit
-              </Button>
-            )}
+              {edit ? (
+                <Stack direction={"row"} spacing={1} alignItems={"center"}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={editWeight === weight}
+                    onClick={handleSave}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
+                </Stack>
+              ) : (
+                <Stack direction={"row"} spacing={1} alignItems={"center"}>
+                  <Button startIcon={<PencilSimple />} onClick={handleEdit}>
+                    Edit
+                  </Button>
+                </Stack>
+              )}
+            </Stack>
           </Stack>
+          {tweets.length > 0 && (
+            <>
+              <Divider flexItem>
+                <Typography variant="h6">Related Tweets</Typography>
+              </Divider>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Twitter ID</TableCell>
+                      <TableCell>Likes</TableCell>
+                      <TableCell>Retweets</TableCell>
+                      <TableCell>Followers</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {tweets.map((tweet) => (
+                      <TableRow key={tweet.tweetID}>
+                        <TableCell>
+                          <Typography
+                            variant="body1"
+                            component={"a"}
+                            href={`https://x.com/_/status/${tweet.tweetID}`}
+                            target="_blank"
+                            sx={{ textDecoration: "none" }}
+                          >
+                            {tweet.tweetID}
+                          </Typography>
+                          <Typography variant="body2" sx={{ opacity: 0.6 }}>
+                            {tweet.tweetTime}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>{tweet.likes}</TableCell>
+                        <TableCell>{tweet.retweets}</TableCell>
+                        <TableCell>{tweet.followers}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          )}
         </Stack>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
+      </DialogActions>
     </Dialog>
   );
 };

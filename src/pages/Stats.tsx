@@ -13,7 +13,7 @@ import {
   RETWEET_STATS,
 } from "@/uitls/contants";
 
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Heart, Repeat, TwitterLogo } from "@phosphor-icons/react";
 
 const Stats: React.FC = () => {
@@ -86,7 +86,10 @@ const Stats: React.FC = () => {
 
   return (
     <>
-      <FilterOptions />
+      <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
+        <Typography variant="h5">{"前田佳織里 @kaorin__bot"}</Typography>
+        <FilterOptions />
+      </Stack>
       <Stack
         direction={isTablet ? "column" : "row"}
         spacing={2}

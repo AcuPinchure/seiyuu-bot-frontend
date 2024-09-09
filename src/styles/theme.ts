@@ -17,24 +17,40 @@ const theme = createTheme({
           contrastText: "#fff",
         },
         secondary: {
-          main: "#daefc0",
+          main: "#fae3cf",
         },
         background: {
           default: "#f5f5f5",
+        },
+        success: {
+          main: "#37c44f",
+          contrastText: "#fff",
+        },
+        error: {
+          main: "#f76157",
+          contrastText: "#fff",
         },
       },
     },
     dark: {
       palette: {
         primary: {
-          main: "#66a64e",
-          contrastText: "#fff",
+          main: "#f5b47f",
+          contrastText: "#000",
         },
         secondary: {
-          main: "#230b4a",
+          main: "#34116b",
         },
         background: {
           default: "#020202",
+        },
+        success: {
+          main: "#37c44f",
+          contrastText: "#fff",
+        },
+        error: {
+          main: "#f76157",
+          contrastText: "#fff",
         },
       },
     },
@@ -118,16 +134,16 @@ const theme = createTheme({
           padding: 2,
           "& .MuiSwitch-switchBase": {
             padding: 4,
-            color: "#9D9CA5",
+            color: theme.palette.secondary.contrastText,
             margin: 1,
             transitionDuration: "300ms",
             "&.Mui-checked": {
               transform: "translateX(19px)",
-              color: theme.palette.success.dark,
+              color: theme.palette.secondary.contrastText,
               "& + .MuiSwitch-track": {
                 backgroundColor: theme.palette.success.light,
                 opacity: 1,
-                border: "1px solid #13566D",
+                border: `1px solid ${theme.palette.secondary.contrastText}`,
               },
               "&.Mui-disabled + .MuiSwitch-track": {
                 opacity: 0.5,
@@ -135,7 +151,7 @@ const theme = createTheme({
             },
             "&.Mui-focusVisible .MuiSwitch-thumb": {
               color: "#33cf4d",
-              border: "6px solid #f2f2f3",
+              border: `1px solid ${theme.palette.secondary.contrastText}`,
             },
             "&.Mui-disabled .MuiSwitch-thumb": {
               opacity: 0.4,
@@ -155,7 +171,7 @@ const theme = createTheme({
             backgroundColor: theme.palette.background.default,
             opacity: 1,
             transition: `background-color 500ms`,
-            border: "1px solid #D2D1D6",
+            border: `1px solid ${theme.palette.secondary.contrastText}`,
           },
         }),
       },

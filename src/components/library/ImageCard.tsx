@@ -9,6 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Heart, Repeat, TwitterLogo } from "@phosphor-icons/react";
+import ImageDetailModal from "./ImageDetailModal";
+import { useState } from "react";
 
 export interface TweetProps {
   tweetID: string;
@@ -40,17 +42,16 @@ const ImageCard: React.FC<ImageCardProps> = (props) => {
     totalPosts,
     maxLikes,
     maxRetweets,
-    weight,
-    totalWeight,
-    tweets,
   } = props;
+
+  const [open, setOpen] = useState(false);
 
   const cardMediaProps = {
     component: mimeType === "video/mp4" ? "video" : "img",
     controls: mimeType === "video/mp4" ? true : undefined,
     src: mimeType === "video/mp4" ? undefined : `/file/${fileID}`,
     alt: fileName,
-    height: 400,
+    height: 300,
     sx: { objectFit: "cover" },
   };
 
@@ -61,13 +62,13 @@ const ImageCard: React.FC<ImageCardProps> = (props) => {
   ];
 
   return (
-    <Card variant="outlined" sx={{ width: 400, m: 1 }}>
+    <Card variant="outlined">
       <CardMedia {...cardMediaProps}>
         {mimeType === "video/mp4" ? (
           <source src={`/file/${fileName}`} type="video/mp4" />
         ) : undefined}
       </CardMedia>
-      <CardActionArea>
+      <CardActionArea onClick={() => setOpen(true)}>
         <CardContent>
           <Typography variant={"h6"} sx={{ wordBreak: "break-all" }}>
             {fileName}
@@ -98,6 +99,7 @@ const ImageCard: React.FC<ImageCardProps> = (props) => {
           ))}
         </CardActions>
       </CardActionArea>
+      <ImageDetailModal open={open} onClose={() => setOpen(false)} {...props} />
     </Card>
   );
 };
