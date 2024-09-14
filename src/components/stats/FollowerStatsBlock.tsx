@@ -1,16 +1,27 @@
-import { Box, Paper, Stack, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Skeleton,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Users } from "@phosphor-icons/react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 interface FollowerStatsBlockProps {
+  loading?: boolean;
   data: {
     data_time: string;
     followers: number;
   }[];
 }
 
-const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({ data }) => {
+const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
+  loading,
+  data,
+}) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
 
@@ -34,47 +45,59 @@ const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({ data }) => {
           </Typography>
           <Typography variant="h6">Followers</Typography>
         </Stack>
-        <Typography variant="h3">
-          {lastestData?.followers?.toLocaleString("en-US")}
-        </Typography>
-        <Typography variant="body1" sx={{ opacity: 0.5 }}>
-          {`${avgGrowth.toFixed(2)} new followers per day`}
-        </Typography>
-        <Box sx={{ filter: isDark ? "invert(0.9)" : undefined }} pt={1}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={{
-              title: {
-                text: "Follower Growth",
-              },
-              series: [
-                {
-                  name: "Followers",
-                  data: data.map((d) => [
-                    new Date(d.data_time).getTime(),
-                    d.followers,
-                  ]),
-                },
-              ],
-              xAxis: {
-                type: "datetime",
-              },
-              yAxis: {
+        {loading ? (
+          <Skeleton variant="text" width={100} height={56} />
+        ) : (
+          <Typography variant="h3">
+            {lastestData?.followers?.toLocaleString("en-US")}
+          </Typography>
+        )}
+        {loading ? (
+          <Skeleton variant="text" width={100} height={20} />
+        ) : (
+          <Typography variant="body1" sx={{ opacity: 0.5 }}>
+            {`${avgGrowth.toFixed(2)} new followers per day`}
+          </Typography>
+        )}
+        {loading ? (
+          <Skeleton variant="rectangular" height={300} />
+        ) : (
+          <Box sx={{ filter: isDark ? "invert(0.9)" : undefined }} pt={1}>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={{
                 title: {
-                  text: "Followers",
+                  text: "Follower Growth",
                 },
-              },
-              legend: {
-                enabled: false, // Hides the legend
-              },
-              chart: {
-                scrollablePlotArea: {
-                  minWidth: 500,
+                series: [
+                  {
+                    name: "Followers",
+                    data: data.map((d) => [
+                      new Date(d.data_time).getTime(),
+                      d.followers,
+                    ]),
+                  },
+                ],
+                xAxis: {
+                  type: "datetime",
                 },
-              },
-            }}
-          />
-        </Box>
+                yAxis: {
+                  title: {
+                    text: "Followers",
+                  },
+                },
+                legend: {
+                  enabled: false, // Hides the legend
+                },
+                chart: {
+                  scrollablePlotArea: {
+                    minWidth: 500,
+                  },
+                },
+              }}
+            />
+          </Box>
+        )}
       </Stack>
     </Paper>
   );

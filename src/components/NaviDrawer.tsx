@@ -19,6 +19,7 @@ import {
 } from "@phosphor-icons/react";
 import ThemeModeSwitcher from "./ThemeModeSwitcher";
 import { Link } from "react-router-dom";
+import useAccountStore from "@/stores/useAccountStore";
 
 interface NaviDrawerProps {
   open: boolean;
@@ -27,7 +28,7 @@ interface NaviDrawerProps {
 }
 
 const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
-  const isAuth = true;
+  const isAuth = useAccountStore((state) => state.user.id !== 0);
 
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
@@ -130,11 +131,7 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
               </ListItem>
             );
           })}
-        <ListItem disableGutters disablePadding>
-          <Box ml={"0.3rem"} height={52} py={1}>
-            <ThemeModeSwitcher />
-          </Box>
-        </ListItem>
+        <ThemeModeSwitcher isMobile={isMobile} barOpen={open} />
       </List>
     </nav>
   );

@@ -1,14 +1,29 @@
 import { useColorScheme } from "@mui/material/styles";
 
 import React, { useState } from "react";
-import { IconButton, MenuItem, Menu } from "@mui/material";
+import {
+  MenuItem,
+  Menu,
+  ListItemButton,
+  Typography,
+  Stack,
+  ListItem,
+} from "@mui/material";
 import { Sun, Moon } from "@phosphor-icons/react";
 
-const ThemeModeSwitcher: React.FC = () => {
+interface ThemeModeSwitcherProps {
+  isMobile: boolean;
+  barOpen: boolean;
+}
+
+const ThemeModeSwitcher: React.FC<ThemeModeSwitcherProps> = ({
+  isMobile,
+  barOpen,
+}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { mode, systemMode, setMode } = useColorScheme();
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleClick(event: React.MouseEvent<HTMLDivElement>) {
     setAnchorEl(event.currentTarget);
   }
 
@@ -26,10 +41,31 @@ const ThemeModeSwitcher: React.FC = () => {
 
   return (
     <>
-      <IconButton onClick={handleClick} aria-describedby={id} color="inherit">
-        {(systemMode || mode) === "dark" ? <Moon /> : <Sun />}
-      </IconButton>
-      <Menu id={id} open={open} anchorEl={anchorEl} onClose={handleClose}>
+      <ListItem disableGutters disablePadding>
+        <ListItemButton
+          onClick={handleClick}
+          aria-describedby={id}
+          color="inherit"
+        >
+          <Stack direction="row" spacing={2} alignItems={"center"} height={52}>
+            {(systemMode || mode) === "dark" ? (
+              <Moon weight="bold" size={20} />
+            ) : (
+              <Sun weight="bold" size={20} />
+            )}
+            {(isMobile || barOpen) && (
+              <Typography variant="body1">Change Theme</Typography>
+            )}
+          </Stack>
+        </ListItemButton>
+      </ListItem>
+      <Menu
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        disableScrollLock
+        onClose={handleClose}
+      >
         <MenuItem onClick={() => handleModeChange("light")}>Light</MenuItem>
         <MenuItem onClick={() => handleModeChange("dark")}>Dark</MenuItem>
         <MenuItem onClick={() => handleModeChange("system")}>System</MenuItem>

@@ -6,15 +6,21 @@ import Typography from "@mui/material/Typography";
 import DateOptions from "./DateOptions";
 import { useTheme } from "@mui/material";
 
-const DateSelector: React.FC = () => {
+interface DateSelectorProps {
+  dateRange: {
+    start_date: string;
+    end_date: string;
+  };
+  setDateRange: (value: { start_date: string; end_date: string }) => void;
+}
+
+const DateSelector: React.FC<DateSelectorProps> = ({
+  dateRange,
+  setDateRange,
+}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const theme = useTheme();
-
-  const [dateRange, setDateRange] = useState({
-    start_date: "",
-    end_date: "",
-  });
 
   const openOptions = Boolean(anchorEl);
 

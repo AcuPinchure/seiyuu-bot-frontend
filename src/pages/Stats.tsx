@@ -6,75 +6,91 @@ import StatsBlock, {
 import LikeDetail from "@/components/stats/statsDetailModal/LikeDetail";
 import PostDetail from "@/components/stats/statsDetailModal/PostDetail";
 import RetweetDetail from "@/components/stats/statsDetailModal/ReweetDetail";
-import {
-  FOLLOWERS_STATS,
-  LIKE_STATS,
-  POST_STATS,
-  RETWEET_STATS,
-} from "@/uitls/contants";
+import useStatsStore from "@/stores/useStatsStore";
 
 import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Heart, Repeat, TwitterLogo } from "@phosphor-icons/react";
+
+import format from "date-fns/format";
+import { useEffect } from "react";
 
 const Stats: React.FC = () => {
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const stats: StatsBlockProps[] = [
+  const { isLoading, stats, followers, queryOptions, getStats, getFollowers } =
+    useStatsStore();
+
+  useEffect(() => {
+    getStats();
+    getFollowers();
+  }, [queryOptions, getStats, getFollowers]);
+
+  const startDate = format(new Date(stats.start_date), "yyyy-MM-dd HH:mm:ss");
+  const endDate = format(new Date(stats.end_date), "yyyy-MM-dd HH:mm:ss");
+
+  const statsData: StatsBlockProps[] = [
     {
+      loading: isLoading.stats,
       icon: <TwitterLogo />,
       title: "Posts",
-      value: POST_STATS.posts.toLocaleString("en-US"),
-      subtitle: `${POST_STATS.actual_interval} posts per hour`,
+      value: stats.posts.toLocaleString("en-US"),
+      subtitle: `${stats.actual_interval.toFixed(2)} posts per hour`,
       detailModalTitle: "Posts",
       detailModalContent: (
         <PostDetail
-          startDate={POST_STATS.start_date}
-          endDate={POST_STATS.end_date}
-          interval={POST_STATS.interval.toLocaleString("en-US")}
-          posts={POST_STATS.posts.toLocaleString("en-US")}
-          scheduledInterval={POST_STATS.scheduled_interval.toLocaleString(
-            "en-US"
-          )}
-          actualInterval={POST_STATS.actual_interval.toLocaleString("en-US")}
-          isActive={POST_STATS.is_active}
+          startDate={startDate}
+          endDate={endDate}
+          interval={stats.interval.toLocaleString("en-US")}
+          posts={stats.posts.toLocaleString("en-US")}
+          scheduledInterval={stats.scheduled_interval.toLocaleString("en-US")}
+          actualInterval={Number(
+            stats.actual_interval.toFixed(2)
+          ).toLocaleString("en-US")}
+          isActive={stats.is_active}
         />
       ),
       modalMaxWidth: undefined,
       modalFullWidth: undefined,
     },
     {
+      loading: isLoading.stats,
       icon: <Heart />,
       title: "Likes",
-      value: LIKE_STATS.likes.toLocaleString("en-US"),
-      subtitle: `${LIKE_STATS.avg_likes} likes per post`,
+      value: stats.likes.toLocaleString("en-US"),
+      subtitle: `${Number(stats.avg_likes.toFixed(2)).toLocaleString(
+        "en-US"
+      )} likes per post`,
       detailModalTitle: "Likes",
       detailModalContent: (
         <LikeDetail
-          startDate={LIKE_STATS.start_date}
-          endDate={LIKE_STATS.end_date}
-          likes={LIKE_STATS.likes.toLocaleString("en-US")}
-          avgLikes={LIKE_STATS.avg_likes.toLocaleString("en-US")}
-          topTweets={LIKE_STATS.top_tweets}
+          startDate={startDate}
+          endDate={endDate}
+          likes={stats.likes.toLocaleString("en-US")}
+          avgLikes={Number(stats.avg_likes.toFixed(2)).toLocaleString("en-US")}
+          topTweets={stats.max_likes}
         />
       ),
       modalMaxWidth: "lg",
       modalFullWidth: true,
     },
     {
+      loading: isLoading.stats,
       icon: <Repeat />,
       title: "Retweets",
-      value: RETWEET_STATS.retweets.toLocaleString("en-US"),
-      subtitle: `${RETWEET_STATS.avg_retweets} retweets per post`,
+      value: stats.rts.toLocaleString("en-US"),
+      subtitle: `${Number(stats.avg_rts.toFixed(2)).toFixed(
+        2
+      )} retweets per post`,
       detailModalTitle: "Retweets",
       detailModalContent: (
         <RetweetDetail
-          startDate={RETWEET_STATS.start_date}
-          endDate={RETWEET_STATS.end_date}
-          retweets={RETWEET_STATS.retweets.toLocaleString("en-US")}
-          avgRetweets={RETWEET_STATS.avg_retweets.toLocaleString("en-US")}
-          topTweets={RETWEET_STATS.top_tweets}
+          startDate={startDate}
+          endDate={endDate}
+          retweets={stats.rts.toLocaleString("en-US")}
+          avgRetweets={Number(stats.avg_rts.toFixed(2)).toLocaleString("en-US")}
+          topTweets={stats.max_rts}
         />
       ),
       modalMaxWidth: "lg",
@@ -82,13 +98,12 @@ const Stats: React.FC = () => {
     },
   ];
 
-  const followers = FOLLOWERS_STATS;
+  console.log("followers", followers);
 
   return (
     <>
-      <Stack direction={"row"} flexWrap={"wrap"} gap={2}>
+      <Stack direction={"row"} flexWrap={"wrap"} gap={2} mb={2}>
         <Typography variant="h5">{"前田佳織里 @kaorin__bot"}</Typography>
-        <FilterOptions />
       </Stack>
       <Stack
         direction={isTablet ? "column" : "row"}
@@ -97,22 +112,13 @@ const Stats: React.FC = () => {
         width={"calc(100% - var(--mui-spacing) - var(--mui-spacing))"}
       >
         <Stack direction={isTablet && !isMobile ? "row" : "column"} spacing={2}>
-          {stats.map((stat) => (
-            <StatsBlock
-              key={stat.title}
-              icon={stat.icon}
-              title={stat.title}
-              value={stat.value}
-              subtitle={stat.subtitle}
-              detailModalTitle={stat.detailModalTitle}
-              detailModalContent={stat.detailModalContent}
-              modalMaxWidth={stat.modalMaxWidth}
-              modalFullWidth={stat.modalFullWidth}
-            />
+          {statsData.map((stat) => (
+            <StatsBlock key={stat.title} {...stat} />
           ))}
         </Stack>
-        <FollowerStatsBlock data={followers} />
+        <FollowerStatsBlock loading={isLoading.followers} data={followers} />
       </Stack>
+      <FilterOptions />
     </>
   );
 };

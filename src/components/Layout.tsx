@@ -1,13 +1,20 @@
 import { Outlet } from "react-router-dom";
 import NaviDrawer from "@/components/NaviDrawer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopBar from "@/components/TopBar";
 import { Box, Container, useMediaQuery, useTheme } from "@mui/material";
+import useAccountStore from "@/stores/useAccountStore";
 
 const Layout: React.FC = () => {
+  const testLogin = useAccountStore((state) => state.testLogin);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    testLogin();
+  }, [testLogin]);
+
   return (
     <>
       <NaviDrawer

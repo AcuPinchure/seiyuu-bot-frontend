@@ -5,12 +5,14 @@ import {
   DialogContent,
   DialogTitle,
   Paper,
+  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 
 export interface StatsBlockProps {
+  loading?: boolean;
   icon: React.ReactNode;
   title: string;
   value: string; // toLocaleString
@@ -22,6 +24,7 @@ export interface StatsBlockProps {
 }
 
 const StatsBlock: React.FC<StatsBlockProps> = ({
+  loading,
   icon,
   title,
   value,
@@ -40,7 +43,9 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
           direction={"column"}
           alignItems="flex-start"
           spacing={2}
-          onClick={detailModalContent ? () => setOpenModal(true) : undefined}
+          onClick={
+            detailModalContent ? () => setOpenModal(!loading) : undefined
+          }
           sx={{ cursor: detailModalContent ? "pointer" : "default" }}
           p={2}
           minWidth={200}
@@ -49,10 +54,18 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
             <Typography variant="h6">{icon}</Typography>
             <Typography variant="h6">{title}</Typography>
           </Stack>
-          <Typography variant="h3">{value}</Typography>
-          <Typography variant="body1" sx={{ opacity: 0.5 }}>
-            {subtitle}
-          </Typography>
+          {loading ? (
+            <Skeleton variant="text" width={100} height={56} />
+          ) : (
+            <Typography variant="h3">{value}</Typography>
+          )}
+          {loading ? (
+            <Skeleton variant="text" width={100} height={20} />
+          ) : (
+            <Typography variant="body1" sx={{ opacity: 0.5 }}>
+              {subtitle}
+            </Typography>
+          )}
         </Stack>
       </Paper>
       {(detailModalTitle || detailModalContent) && (
