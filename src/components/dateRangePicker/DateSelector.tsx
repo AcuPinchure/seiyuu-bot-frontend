@@ -8,10 +8,10 @@ import { useTheme } from "@mui/material";
 
 interface DateSelectorProps {
   dateRange: {
-    start_date: string;
-    end_date: string;
+    startDate: string;
+    endDate: string;
   };
-  setDateRange: (value: { start_date: string; end_date: string }) => void;
+  setDateRange: (value: { startDate: string; endDate: string }) => void;
 }
 
 const DateSelector: React.FC<DateSelectorProps> = ({
@@ -42,13 +42,13 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         ref={anchorRef}
         onClick={() => setAnchorEl(anchorRef.current)}
       >
-        {dateRange.start_date && dateRange.end_date ? (
+        {dateRange.startDate && dateRange.endDate ? (
           <Typography
             flexGrow={1}
             variant="body1"
             color={theme.palette.secondary.contrastText}
           >
-            {dateRange.start_date} - {dateRange.end_date}
+            {dateRange.startDate} - {dateRange.endDate}
           </Typography>
         ) : (
           <Typography flexGrow={1} variant="body1" color={"#9D9CA5"}>

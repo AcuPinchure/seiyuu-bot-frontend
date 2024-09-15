@@ -40,7 +40,7 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
           zIndex: 100,
         }}
       >
-        <Funnel />
+        <Funnel size={24} />
       </Fab>
       <Popover
         id={id}

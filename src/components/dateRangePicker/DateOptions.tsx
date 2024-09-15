@@ -61,7 +61,7 @@ interface DateOptionsProps {
   open: boolean;
   anchorEl: HTMLElement | null;
   setAnchorEl: (value: HTMLElement | null) => void;
-  onSubmit: (options: { start_date: string; end_date: string }) => void;
+  onSubmit: (options: { startDate: string; endDate: string }) => void;
 }
 
 const DateOptions: React.FC<DateOptionsProps> = ({
@@ -71,8 +71,8 @@ const DateOptions: React.FC<DateOptionsProps> = ({
   onSubmit,
 }) => {
   const [dateRange, setDateRange] = useState({
-    start_date: "",
-    end_date: "",
+    startDate: "",
+    endDate: "",
   });
 
   const theme = useTheme();
@@ -81,11 +81,11 @@ const DateOptions: React.FC<DateOptionsProps> = ({
   const isDark = theme.palette.mode === "dark";
 
   const selectedRange = {
-    startDate: dateRange.start_date
-      ? new Date(`${dateRange.start_date}T00:00:00Z`)
+    startDate: dateRange.startDate
+      ? new Date(`${dateRange.startDate}T00:00:00Z`)
       : new Date(),
-    endDate: dateRange.end_date
-      ? new Date(`${dateRange.end_date}T00:00:00Z`)
+    endDate: dateRange.endDate
+      ? new Date(`${dateRange.endDate}T00:00:00Z`)
       : new Date(),
     key: "selection",
   };
@@ -95,20 +95,20 @@ const DateOptions: React.FC<DateOptionsProps> = ({
     const endDate = ranges.selection.endDate;
     if (startDate && endDate) {
       setDateRange({
-        start_date: format(startDate, "yyyy-MM-dd"),
-        end_date: format(endDate, "yyyy-MM-dd"),
+        startDate: format(startDate, "yyyy-MM-dd"),
+        endDate: format(endDate, "yyyy-MM-dd"),
       });
     }
   }
 
   function handleReset() {
-    setDateRange({ start_date: "", end_date: "" });
+    setDateRange({ startDate: "", endDate: "" });
   }
 
   function handleConfirm() {
     onSubmit({
-      start_date: dateRange.start_date,
-      end_date: dateRange.end_date,
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
     });
     setAnchorEl(null);
   }
@@ -166,12 +166,12 @@ const DateOptions: React.FC<DateOptionsProps> = ({
             border={"1px solid " + theme.palette.secondary.contrastText}
             borderRadius={"0.5rem"}
           >
-            {dateRange.start_date && dateRange.end_date ? (
+            {dateRange.startDate && dateRange.endDate ? (
               <Typography
                 variant="body1"
                 color={theme.palette.secondary.contrastText}
               >
-                {`${dateRange.start_date} - ${dateRange.end_date}`}
+                {`${dateRange.startDate} - ${dateRange.startDate}`}
               </Typography>
             ) : (
               <Typography variant="body1" color={"#9D9CA5"}>

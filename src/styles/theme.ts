@@ -30,6 +30,9 @@ const theme = createTheme({
           main: "#f76157",
           contrastText: "#fff",
         },
+        action: {
+          selectedOpacity: 0.3,
+        },
       },
     },
     dark: {

@@ -58,6 +58,9 @@ export async function getStats(
         },
       }
     );
+    if (!response.data?.status) {
+      return ERROR_RESPONSE;
+    }
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

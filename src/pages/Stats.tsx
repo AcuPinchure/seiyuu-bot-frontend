@@ -7,8 +7,15 @@ import LikeDetail from "@/components/stats/statsDetailModal/LikeDetail";
 import PostDetail from "@/components/stats/statsDetailModal/PostDetail";
 import RetweetDetail from "@/components/stats/statsDetailModal/ReweetDetail";
 import useStatsStore from "@/stores/useStatsStore";
+import useStatusStore from "@/stores/useStatusStore";
 
-import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Skeleton,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Heart, Repeat, TwitterLogo } from "@phosphor-icons/react";
 
 import format from "date-fns/format";
@@ -19,16 +26,30 @@ const Stats: React.FC = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const { isLoading, stats, followers, queryOptions, getStats, getFollowers } =
+  const { stats, followers, queryOptions, getStats, getFollowers } =
     useStatsStore();
+
+  const isLoading = {
+    stats: useStatsStore((state) => state.isLoading.stats),
+    followers: useStatsStore((state) => state.isLoading.followers),
+    status: useStatusStore((state) => state.isLoading.get),
+  };
+
+  const { getStatus, status } = useStatusStore();
 
   useEffect(() => {
     getStats();
     getFollowers();
-  }, [queryOptions, getStats, getFollowers]);
+    getStatus();
+  }, [queryOptions, getStats, getFollowers, getStatus]);
 
   const startDate = format(new Date(stats.start_date), "yyyy-MM-dd HH:mm:ss");
   const endDate = format(new Date(stats.end_date), "yyyy-MM-dd HH:mm:ss");
+
+  const tweetFetchStatus = stats.posts > 0;
+  const followerFetchStatus = followers.length > 0;
+
+  const displayedSeiyuu = status.find((s) => s.id === queryOptions.seiyuuID);
 
   const statsData: StatsBlockProps[] = [
     {
@@ -53,6 +74,7 @@ const Stats: React.FC = () => {
       ),
       modalMaxWidth: undefined,
       modalFullWidth: undefined,
+      status: tweetFetchStatus,
     },
     {
       loading: isLoading.stats,
@@ -74,6 +96,7 @@ const Stats: React.FC = () => {
       ),
       modalMaxWidth: "lg",
       modalFullWidth: true,
+      status: tweetFetchStatus,
     },
     {
       loading: isLoading.stats,
@@ -95,6 +118,7 @@ const Stats: React.FC = () => {
       ),
       modalMaxWidth: "lg",
       modalFullWidth: undefined,
+      status: tweetFetchStatus,
     },
   ];
 
@@ -103,7 +127,14 @@ const Stats: React.FC = () => {
   return (
     <>
       <Stack direction={"row"} flexWrap={"wrap"} gap={2} mb={2}>
-        <Typography variant="h5">{"前田佳織里 @kaorin__bot"}</Typography>
+        {isLoading.status ? (
+          <Skeleton variant="text" width={200} height={56} />
+        ) : (
+          <Typography variant="h5">
+            {displayedSeiyuu &&
+              `${displayedSeiyuu.name} @${displayedSeiyuu.screen_name}`}
+          </Typography>
+        )}
       </Stack>
       <Stack
         direction={isTablet ? "column" : "row"}
@@ -116,7 +147,11 @@ const Stats: React.FC = () => {
             <StatsBlock key={stat.title} {...stat} />
           ))}
         </Stack>
-        <FollowerStatsBlock loading={isLoading.followers} data={followers} />
+        <FollowerStatsBlock
+          loading={isLoading.followers}
+          data={followers}
+          status={followerFetchStatus}
+        />
       </Stack>
       <FilterOptions />
     </>

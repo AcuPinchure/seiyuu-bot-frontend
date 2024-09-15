@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -21,6 +22,7 @@ export interface StatsBlockProps {
   detailModalContent?: React.ReactNode;
   modalMaxWidth?: "xs" | "sm" | "md" | "lg" | "xl";
   modalFullWidth?: boolean;
+  status: boolean;
 }
 
 const StatsBlock: React.FC<StatsBlockProps> = ({
@@ -33,8 +35,36 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
   detailModalContent,
   modalMaxWidth,
   modalFullWidth,
+  status,
 }) => {
   const [openModal, setOpenModal] = useState(false);
+
+  const content = status ? (
+    <>
+      {loading ? (
+        <Skeleton variant="text" width={100} height={56} />
+      ) : (
+        <Typography variant="h3">{value}</Typography>
+      )}
+      {loading ? (
+        <Skeleton variant="text" width={100} height={20} />
+      ) : (
+        <Typography variant="body1" sx={{ opacity: 0.5 }}>
+          {subtitle}
+        </Typography>
+      )}
+    </>
+  ) : (
+    <Alert
+      severity="error"
+      variant="outlined"
+      sx={{
+        justifySelf: "center",
+      }}
+    >
+      No tweets found in the given interval
+    </Alert>
+  );
 
   return (
     <>
@@ -44,7 +74,9 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
           alignItems="flex-start"
           spacing={2}
           onClick={
-            detailModalContent ? () => setOpenModal(!loading) : undefined
+            detailModalContent
+              ? () => setOpenModal(status && !loading)
+              : undefined
           }
           sx={{ cursor: detailModalContent ? "pointer" : "default" }}
           p={2}
@@ -54,18 +86,8 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
             <Typography variant="h6">{icon}</Typography>
             <Typography variant="h6">{title}</Typography>
           </Stack>
-          {loading ? (
-            <Skeleton variant="text" width={100} height={56} />
-          ) : (
-            <Typography variant="h3">{value}</Typography>
-          )}
-          {loading ? (
-            <Skeleton variant="text" width={100} height={20} />
-          ) : (
-            <Typography variant="body1" sx={{ opacity: 0.5 }}>
-              {subtitle}
-            </Typography>
-          )}
+
+          {content}
         </Stack>
       </Paper>
       {(detailModalTitle || detailModalContent) && (

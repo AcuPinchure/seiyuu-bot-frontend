@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Paper,
   Skeleton,
@@ -11,6 +12,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 interface FollowerStatsBlockProps {
+  status: boolean;
   loading?: boolean;
   data: {
     data_time: string;
@@ -19,6 +21,7 @@ interface FollowerStatsBlockProps {
 }
 
 const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
+  status,
   loading,
   data,
 }) => {
@@ -36,6 +39,68 @@ const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
           (1000 * 60 * 60 * 24))
       : 0;
 
+  const content = status ? (
+    <>
+      {loading ? (
+        <Skeleton variant="text" width={100} height={56} />
+      ) : (
+        <Typography variant="h3">
+          {lastestData?.followers?.toLocaleString("en-US")}
+        </Typography>
+      )}
+      {loading ? (
+        <Skeleton variant="text" width={100} height={20} />
+      ) : (
+        <Typography variant="body1" sx={{ opacity: 0.5 }}>
+          {`${avgGrowth.toFixed(2)} new followers per day`}
+        </Typography>
+      )}
+      {loading ? (
+        <Skeleton variant="rectangular" height={300} />
+      ) : (
+        <Box sx={{ filter: isDark ? "invert(0.9)" : undefined }} pt={1}>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={{
+              title: {
+                text: "Follower Growth",
+              },
+              series: [
+                {
+                  name: "Followers",
+                  data: data.map((d) => [
+                    new Date(d.data_time).getTime(),
+                    d.followers,
+                  ]),
+                },
+              ],
+              xAxis: {
+                type: "datetime",
+              },
+              yAxis: {
+                title: {
+                  text: "Followers",
+                },
+              },
+              legend: {
+                enabled: false, // Hides the legend
+              },
+              chart: {
+                scrollablePlotArea: {
+                  minWidth: 500,
+                },
+              },
+            }}
+          />
+        </Box>
+      )}
+    </>
+  ) : (
+    <Alert severity="error" variant="outlined" sx={{ justifySelf: "center" }}>
+      No followers found in the given interval
+    </Alert>
+  );
+
   return (
     <Paper elevation={0} variant="outlined" sx={{ flexGrow: 1 }}>
       <Stack direction={"column"} alignItems="stretch" spacing={1} p={2}>
@@ -45,59 +110,7 @@ const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
           </Typography>
           <Typography variant="h6">Followers</Typography>
         </Stack>
-        {loading ? (
-          <Skeleton variant="text" width={100} height={56} />
-        ) : (
-          <Typography variant="h3">
-            {lastestData?.followers?.toLocaleString("en-US")}
-          </Typography>
-        )}
-        {loading ? (
-          <Skeleton variant="text" width={100} height={20} />
-        ) : (
-          <Typography variant="body1" sx={{ opacity: 0.5 }}>
-            {`${avgGrowth.toFixed(2)} new followers per day`}
-          </Typography>
-        )}
-        {loading ? (
-          <Skeleton variant="rectangular" height={300} />
-        ) : (
-          <Box sx={{ filter: isDark ? "invert(0.9)" : undefined }} pt={1}>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={{
-                title: {
-                  text: "Follower Growth",
-                },
-                series: [
-                  {
-                    name: "Followers",
-                    data: data.map((d) => [
-                      new Date(d.data_time).getTime(),
-                      d.followers,
-                    ]),
-                  },
-                ],
-                xAxis: {
-                  type: "datetime",
-                },
-                yAxis: {
-                  title: {
-                    text: "Followers",
-                  },
-                },
-                legend: {
-                  enabled: false, // Hides the legend
-                },
-                chart: {
-                  scrollablePlotArea: {
-                    minWidth: 500,
-                  },
-                },
-              }}
-            />
-          </Box>
-        )}
+        {content}
       </Stack>
     </Paper>
   );
