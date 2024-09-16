@@ -5,7 +5,7 @@ import StatsBlock, {
 } from "@/components/stats/StatsBlock";
 import LikeDetail from "@/components/stats/statsDetailModal/LikeDetail";
 import PostDetail from "@/components/stats/statsDetailModal/PostDetail";
-import RetweetDetail from "@/components/stats/statsDetailModal/ReweetDetail";
+import RetweetDetail from "@/components/stats/statsDetailModal/RetweetDetail";
 import useStatsStore from "@/stores/useStatsStore";
 import useStatusStore from "@/stores/useStatusStore";
 
@@ -128,7 +128,7 @@ const Stats: React.FC = () => {
     <>
       <Stack direction={"row"} flexWrap={"wrap"} gap={2} mb={2}>
         {isLoading.status ? (
-          <Skeleton variant="text" width={200} height={56} />
+          <Skeleton variant="text" width={200} height={56} animation="wave" />
         ) : (
           <Typography variant="h5">
             {displayedSeiyuu &&

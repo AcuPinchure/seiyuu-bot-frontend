@@ -42,21 +42,21 @@ const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
   const content = status ? (
     <>
       {loading ? (
-        <Skeleton variant="text" width={100} height={56} />
+        <Skeleton variant="text" width={100} height={56} animation="wave" />
       ) : (
         <Typography variant="h3">
           {lastestData?.followers?.toLocaleString("en-US")}
         </Typography>
       )}
       {loading ? (
-        <Skeleton variant="text" width={100} height={20} />
+        <Skeleton variant="text" width={100} height={20} animation="wave" />
       ) : (
         <Typography variant="body1" sx={{ opacity: 0.5 }}>
           {`${avgGrowth.toFixed(2)} new followers per day`}
         </Typography>
       )}
       {loading ? (
-        <Skeleton variant="rectangular" height={300} />
+        <Skeleton variant="rectangular" height={300} animation="wave" />
       ) : (
         <Box sx={{ filter: isDark ? "invert(0.9)" : undefined }} pt={1}>
           <HighchartsReact

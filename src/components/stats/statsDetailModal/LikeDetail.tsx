@@ -1,3 +1,4 @@
+import useAccountStore from "@/stores/useAccountStore";
 import {
   Divider,
   Stack,
@@ -24,7 +25,14 @@ const LikeDetail: React.FC<LikeDetailProps> = ({
   avgLikes,
   topTweets,
 }) => {
+  const user = useAccountStore((state) => state.user);
+
   function handleViewInLibrary(tweetId: string) {
+    if (!(user.id > 0)) {
+      return () => {
+        console.log("User not logged in");
+      };
+    }
     return () => {
       console.log(`View in Library: ${tweetId}`);
     };
@@ -95,12 +103,14 @@ const LikeDetail: React.FC<LikeDetailProps> = ({
               <Box my={-3}>
                 <Tweet id={tweetId} />
               </Box>
-              <Button
-                onClick={handleViewInLibrary(tweetId)}
-                endIcon={<ArrowSquareOut />}
-              >
-                View in Library
-              </Button>
+              {user.id > 0 && (
+                <Button
+                  onClick={handleViewInLibrary(tweetId)}
+                  endIcon={<ArrowSquareOut />}
+                >
+                  View in Library
+                </Button>
+              )}
             </Stack>
           </Grid>
         ))}

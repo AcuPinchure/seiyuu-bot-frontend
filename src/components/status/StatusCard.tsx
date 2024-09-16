@@ -122,8 +122,12 @@ const StatusCard: React.FC<StatusCardProps> = ({
   return showPlaceholder ? (
     <Card variant="outlined">
       <CardHeader
-        title={<Skeleton variant="text" width={100} height={56} />}
-        subheader={<Skeleton variant="text" width={100} height={20} />}
+        title={
+          <Skeleton variant="text" width={100} height={56} animation="wave" />
+        }
+        subheader={
+          <Skeleton variant="text" width={100} height={20} animation="wave" />
+        }
         action={
           <Typography variant="h5" m={1}>
             <TwitterLogo />
@@ -147,7 +151,12 @@ const StatusCard: React.FC<StatusCardProps> = ({
                     spacing={2}
                     height={"2.5rem"}
                   >
-                    <Skeleton variant="text" width={100} height={20} />
+                    <Skeleton
+                      variant="text"
+                      width={100}
+                      height={20}
+                      animation="wave"
+                    />
                   </Stack>
                 </td>
               </tr>
@@ -213,16 +222,17 @@ const StatusCard: React.FC<StatusCardProps> = ({
               >
                 Save
               </LoadingButton>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleCancel}
-              >
+              <Button color="primary" onClick={handleCancel}>
                 Cancel
               </Button>
             </>
           ) : (
-            <Button startIcon={<PencilSimple />} onClick={handleEdit}>
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<PencilSimple />}
+              onClick={handleEdit}
+            >
               Edit
             </Button>
           )}

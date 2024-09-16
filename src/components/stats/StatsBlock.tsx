@@ -42,12 +42,12 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
   const content = status ? (
     <>
       {loading ? (
-        <Skeleton variant="text" width={100} height={56} />
+        <Skeleton variant="text" width={100} height={56} animation="wave" />
       ) : (
         <Typography variant="h3">{value}</Typography>
       )}
       {loading ? (
-        <Skeleton variant="text" width={100} height={20} />
+        <Skeleton variant="text" width={100} height={20} animation="wave" />
       ) : (
         <Typography variant="body1" sx={{ opacity: 0.5 }}>
           {subtitle}
@@ -97,6 +97,7 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
           scroll="paper"
           maxWidth={modalMaxWidth}
           fullWidth={modalFullWidth}
+          disableScrollLock
         >
           {detailModalTitle && <DialogTitle>{detailModalTitle}</DialogTitle>}
           <DialogContent>{detailModalContent}</DialogContent>

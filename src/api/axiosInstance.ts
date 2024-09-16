@@ -1,9 +1,11 @@
 import axios from "axios";
 import { setupCache } from "axios-cache-interceptor";
 
+const BASE_URL = import.meta.env.VITE_API_URL;
+
 const baseRequest = setupCache(
   axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: BASE_URL,
     withCredentials: true,
   }),
   {
@@ -13,3 +15,4 @@ const baseRequest = setupCache(
 );
 
 export default baseRequest;
+export { BASE_URL };

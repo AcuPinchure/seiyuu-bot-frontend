@@ -25,8 +25,8 @@ const Status: React.FC = () => {
       }}
     >
       {isLoading.get
-        ? [
-            <Grid size={1}>
+        ? [...Array(4)].map((_, index) => (
+            <Grid key={index} size={1}>
               <StatusCard
                 name={""}
                 screenName={""}
@@ -36,41 +36,8 @@ const Status: React.FC = () => {
                 interval={0}
                 showPlaceholder
               />
-            </Grid>,
-            <Grid size={1}>
-              <StatusCard
-                name={""}
-                screenName={""}
-                idName={""}
-                isActive={false}
-                lastPost={""}
-                interval={0}
-                showPlaceholder
-              />
-            </Grid>,
-            <Grid size={1}>
-              <StatusCard
-                name={""}
-                screenName={""}
-                idName={""}
-                isActive={false}
-                lastPost={""}
-                interval={0}
-                showPlaceholder
-              />
-            </Grid>,
-            <Grid size={1}>
-              <StatusCard
-                name={""}
-                screenName={""}
-                idName={""}
-                isActive={false}
-                lastPost={""}
-                interval={0}
-                showPlaceholder
-              />
-            </Grid>,
-          ]
+            </Grid>
+          ))
         : status.map((service) => {
             let lastPost = "";
             try {

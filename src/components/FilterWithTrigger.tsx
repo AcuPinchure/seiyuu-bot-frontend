@@ -1,4 +1,4 @@
-import { Box, Fab, Popover } from "@mui/material";
+import { Box, Button, DialogActions, Fab, Popover } from "@mui/material";
 import type { FabProps } from "@mui/material";
 import { useState } from "react";
 import { Funnel } from "@phosphor-icons/react";
@@ -6,11 +6,15 @@ import { Funnel } from "@phosphor-icons/react";
 interface FilterWithTriggerProps {
   triggerButtonProps?: Omit<FabProps, "onClick">;
   children: React.ReactNode;
+  onApply?: () => void;
+  onCancel?: () => void;
 }
 
 const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
   triggerButtonProps,
   children,
+  onApply,
+  onCancel,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -20,6 +24,20 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
 
   function handleClose() {
     setAnchorEl(null);
+  }
+
+  function handleCancel() {
+    if (onCancel) {
+      onCancel();
+    }
+    handleClose();
+  }
+
+  function handleApply() {
+    if (onApply) {
+      onApply();
+    }
+    handleClose();
   }
 
   const open = Boolean(anchorEl);
@@ -60,11 +78,20 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
           paper: {
             sx: {
               padding: 2,
+              overflow: "hidden",
             },
           },
         }}
       >
         {children}
+        <DialogActions sx={{ marginX: -2, marginBottom: -2 }}>
+          <Button onClick={handleCancel}>Close</Button>
+          {onApply && (
+            <Button variant="contained" onClick={handleApply}>
+              Apply
+            </Button>
+          )}
+        </DialogActions>
       </Popover>
     </>
   );

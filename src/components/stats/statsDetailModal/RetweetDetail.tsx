@@ -1,4 +1,13 @@
-import { Divider, Stack, Typography } from "@mui/material";
+import useAccountStore from "@/stores/useAccountStore";
+import {
+  Box,
+  Button,
+  Divider,
+  Grid2 as Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { ArrowSquareOut } from "@phosphor-icons/react";
 import { Tweet } from "react-tweet";
 
 interface RetweetDetailProps {
@@ -16,6 +25,19 @@ const RetweetDetail: React.FC<RetweetDetailProps> = ({
   avgRetweets,
   topTweets,
 }) => {
+  const user = useAccountStore((state) => state.user);
+
+  function handleViewInLibrary(tweetId: string) {
+    if (!(user.id > 0)) {
+      return () => {
+        console.log("User not logged in");
+      };
+    }
+    return () => {
+      console.log(`View in Library: ${tweetId}`);
+    };
+  }
+
   const tableContent = [
     {
       title: "Start Date",
@@ -58,27 +80,41 @@ const RetweetDetail: React.FC<RetweetDetailProps> = ({
           Top Tweets
         </Typography>
       </Divider>
-      <Stack
+      <Grid
+        container
         direction={"row"}
+        justifyContent={"center"}
         mt={2}
-        flexWrap={"wrap"}
-        justifyContent={"space-evenly"}
+        gap={2}
+        columns={{
+          xs: 1,
+          sm: 2,
+          md: 3,
+          lg: 4,
+          xl: 5,
+        }}
       >
         {topTweets.map((tweetId, index) => (
-          <Stack
-            key={tweetId}
-            maxWidth={350}
-            mx={0.5}
-            spacing={0}
-            direction={"column"}
-          >
-            <Typography variant="h6" textAlign={"center"}>
-              #{index + 1}
-            </Typography>
-            <Tweet id={tweetId} />
-          </Stack>
+          <Grid key={tweetId}>
+            <Stack direction={"column"} spacing={0}>
+              <Typography variant="h6" textAlign={"center"}>
+                #{index + 1}
+              </Typography>
+              <Box my={-3}>
+                <Tweet id={tweetId} />
+              </Box>
+              {user.id > 0 && (
+                <Button
+                  onClick={handleViewInLibrary(tweetId)}
+                  endIcon={<ArrowSquareOut />}
+                >
+                  View in Library
+                </Button>
+              )}
+            </Stack>
+          </Grid>
         ))}
-      </Stack>
+      </Grid>
     </>
   );
 };

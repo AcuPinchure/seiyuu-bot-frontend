@@ -7,6 +7,7 @@ import {
   DialogTitle,
   Divider,
   OutlinedInput,
+  Skeleton,
   Stack,
   Table,
   TableBody,
@@ -19,8 +20,12 @@ import {
   useTheme,
 } from "@mui/material";
 import type { ImageCardProps } from "./ImageCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PencilSimple } from "@phosphor-icons/react";
+import { getImageTweet } from "@/api/endPoints/images";
+import type { ImageTweetResponse } from "@/api/endPoints/images";
+import format from "date-fns/format";
+import { BASE_URL } from "@/api/axiosInstance";
 
 interface ImageDetailModalProps {
   open: boolean;
@@ -29,7 +34,7 @@ interface ImageDetailModalProps {
 
 const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
   fileID,
-  fileName,
+  filePath,
   mimeType,
   seiyuu,
   totalPosts,
@@ -37,7 +42,6 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
   maxRetweets,
   weight,
   totalWeight,
-  tweets,
   open,
   onClose,
 }) => {
@@ -47,6 +51,9 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
 
   const [edit, setEdit] = useState(false);
   const [editWeight, setEditWeight] = useState(weight);
+
+  const [tweets, setTweets] = useState<ImageTweetResponse["data"]>([]);
+  const [tweetLoading, setTweetLoading] = useState(false);
 
   function handleEdit() {
     setEdit(true);
@@ -60,6 +67,8 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
     setEditWeight(weight);
     setEdit(false);
   }
+
+  const fileName = filePath.split("/").pop() || "Unknown";
 
   const tableContent = [
     {
@@ -92,6 +101,18 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
     },
   ];
 
+  useEffect(() => {
+    if (!open) return;
+    setTweetLoading(true);
+    getImageTweet(fileID)
+      .then((response) => {
+        setTweets(response);
+      })
+      .finally(() => {
+        setTweetLoading(false);
+      });
+  }, [fileID, open]);
+
   return (
     <Dialog
       open={open}
@@ -99,20 +120,45 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
       scroll="paper"
       maxWidth="md"
       fullWidth
+      disableScrollLock
     >
       <DialogTitle>{fileName}</DialogTitle>
       <DialogContent>
         <Stack direction={"column"} spacing={2}>
-          <Stack direction={isTablet ? "column" : "row"}>
+          <Stack direction={isTablet ? "column" : "row"} spacing={2}>
             <Box flex={1}>
-              <img src={`/file/${fileID}`} alt={fileName} />
+              {mimeType === "video/mp4" ? (
+                <video
+                  controls
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <source
+                    src={`${BASE_URL}/file/${filePath}`}
+                    type="video/mp4"
+                  />
+                </video>
+              ) : (
+                <img
+                  src={`${BASE_URL}/file/${filePath}`}
+                  alt={fileName}
+                  style={{
+                    objectFit: "contain",
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              )}
             </Box>
             <Stack direction={"column"} spacing={2}>
               <table>
                 <tbody>
                   {tableContent.map((row) =>
                     isMobile ? (
-                      <tr>
+                      <tr key={row.title}>
                         <td>
                           <Typography variant="body1" fontWeight={500} mt={1}>
                             {row.title}
@@ -121,7 +167,7 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
                         </td>
                       </tr>
                     ) : (
-                      <tr>
+                      <tr key={row.title}>
                         <td style={{ width: "8rem" }}>
                           <Typography variant="body1" fontWeight={500} my={0.5}>
                             {row.title}
@@ -143,9 +189,11 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
                   </Typography>
                   <OutlinedInput
                     value={editWeight.toString()}
-                    onChange={(e) => setEditWeight(parseInt(e.target.value))}
+                    onChange={(e) =>
+                      setEditWeight(parseFloat(e.target.value) || 0)
+                    }
                     type="number"
-                    inputProps={{ min: 0, max: 100 }}
+                    inputProps={{ min: 0, max: 100, step: 0.01 }}
                     size="small"
                     sx={{ width: "6rem" }}
                     disabled={!edit}
@@ -166,17 +214,18 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
                   >
                     Save
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleCancel}
-                  >
+                  <Button color="primary" onClick={handleCancel}>
                     Cancel
                   </Button>
                 </Stack>
               ) : (
                 <Stack direction={"row"} spacing={1} alignItems={"center"}>
-                  <Button startIcon={<PencilSimple />} onClick={handleEdit}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<PencilSimple />}
+                    onClick={handleEdit}
+                  >
                     Edit
                   </Button>
                 </Stack>
@@ -199,27 +248,73 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {tweets.map((tweet) => (
-                      <TableRow key={tweet.tweetID}>
-                        <TableCell>
-                          <Typography
-                            variant="body1"
-                            component={"a"}
-                            href={`https://x.com/_/status/${tweet.tweetID}`}
-                            target="_blank"
-                            sx={{ textDecoration: "none" }}
-                          >
-                            {tweet.tweetID}
-                          </Typography>
-                          <Typography variant="body2" sx={{ opacity: 0.6 }}>
-                            {tweet.tweetTime}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{tweet.likes}</TableCell>
-                        <TableCell>{tweet.retweets}</TableCell>
-                        <TableCell>{tweet.followers}</TableCell>
-                      </TableRow>
-                    ))}
+                    {tweetLoading
+                      ? [...Array(5)].map((_, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Skeleton
+                                variant="text"
+                                width={100}
+                                height={16}
+                                animation="wave"
+                              />
+                              <Skeleton
+                                variant="text"
+                                width={80}
+                                height={12}
+                                animation="wave"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton
+                                variant="text"
+                                width={20}
+                                height={16}
+                                animation="wave"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton
+                                variant="text"
+                                width={20}
+                                height={16}
+                                animation="wave"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton
+                                variant="text"
+                                width={30}
+                                height={16}
+                                animation="wave"
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      : tweets.map((tweet) => (
+                          <TableRow key={tweet.id}>
+                            <TableCell>
+                              <Typography
+                                variant="body1"
+                                component={"a"}
+                                href={`https://x.com/_/status/${tweet.id}`}
+                                target="_blank"
+                                sx={{ textDecoration: "none" }}
+                              >
+                                {tweet.id}
+                              </Typography>
+                              <Typography variant="body2" sx={{ opacity: 0.6 }}>
+                                {format(
+                                  new Date(tweet.post_time),
+                                  "yyyy-MM-dd HH:mm:ss"
+                                )}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>{tweet.like}</TableCell>
+                            <TableCell>{tweet.rt}</TableCell>
+                            <TableCell>{tweet.followers}</TableCell>
+                          </TableRow>
+                        ))}
                   </TableBody>
                 </Table>
               </TableContainer>

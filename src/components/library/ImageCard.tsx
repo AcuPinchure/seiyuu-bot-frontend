@@ -5,12 +5,14 @@ import {
   CardContent,
   CardMedia,
   Divider,
+  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { Heart, Repeat, TwitterLogo } from "@phosphor-icons/react";
 import ImageDetailModal from "./ImageDetailModal";
-import { useState } from "react";
+import { useState, Fragment } from "react";
+import { BASE_URL } from "@/api/axiosInstance";
 
 export interface TweetProps {
   tweetID: string;
@@ -22,7 +24,7 @@ export interface TweetProps {
 
 export interface ImageCardProps {
   fileID: number;
-  fileName: string;
+  filePath: string;
   mimeType: string;
   seiyuu: string;
   totalPosts: number;
@@ -30,18 +32,18 @@ export interface ImageCardProps {
   maxRetweets: number;
   weight: number;
   totalWeight: number;
-  tweets: TweetProps[];
+  showPlaceholder?: boolean;
 }
 
 const ImageCard: React.FC<ImageCardProps> = (props) => {
   const {
-    fileID,
-    fileName,
+    filePath,
     mimeType,
     seiyuu,
     totalPosts,
     maxLikes,
     maxRetweets,
+    showPlaceholder,
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -49,8 +51,8 @@ const ImageCard: React.FC<ImageCardProps> = (props) => {
   const cardMediaProps = {
     component: mimeType === "video/mp4" ? "video" : "img",
     controls: mimeType === "video/mp4" ? true : undefined,
-    src: mimeType === "video/mp4" ? undefined : `/file/${fileID}`,
-    alt: fileName,
+    src: mimeType === "video/mp4" ? undefined : `${BASE_URL}/file/${filePath}`,
+    alt: filePath,
     height: 300,
     sx: { objectFit: "cover" },
   };
@@ -63,43 +65,68 @@ const ImageCard: React.FC<ImageCardProps> = (props) => {
 
   return (
     <Card variant="outlined">
-      <CardMedia {...cardMediaProps}>
-        {mimeType === "video/mp4" ? (
-          <source src={`/file/${fileName}`} type="video/mp4" />
-        ) : undefined}
-      </CardMedia>
-      <CardActionArea onClick={() => setOpen(true)}>
+      {showPlaceholder ? (
+        <Skeleton variant="rectangular" height={300} animation="wave" />
+      ) : (
+        <CardMedia {...cardMediaProps}>
+          {mimeType === "video/mp4" ? (
+            <source src={`${BASE_URL}/file/${filePath}`} type="video/mp4" />
+          ) : undefined}
+        </CardMedia>
+      )}
+      <CardActionArea onClick={() => setOpen(!showPlaceholder)}>
         <CardContent>
-          <Typography variant={"h6"} sx={{ wordBreak: "break-all" }}>
-            {fileName}
-          </Typography>
-          <Typography variant={"body2"} sx={{ opacity: 0.6 }}>
-            {seiyuu}
-          </Typography>
-          <Typography variant={"body2"} sx={{ opacity: 0.6 }}>
-            {mimeType}
-          </Typography>
+          {showPlaceholder ? (
+            <Skeleton variant="text" width={100} height={20} animation="wave" />
+          ) : (
+            <Typography variant={"h6"} sx={{ wordBreak: "break-all" }}>
+              {filePath.split("/").pop() || "Unknown"}
+            </Typography>
+          )}
+          {showPlaceholder ? (
+            <Skeleton variant="text" width={100} height={16} animation="wave" />
+          ) : (
+            <Typography variant={"body2"} sx={{ opacity: 0.6 }}>
+              {seiyuu}
+            </Typography>
+          )}
+          {showPlaceholder ? (
+            <Skeleton variant="text" width={100} height={16} animation="wave" />
+          ) : (
+            <Typography variant={"body2"} sx={{ opacity: 0.6 }}>
+              {mimeType}
+            </Typography>
+          )}
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "space-evenly", p: 0 }}>
           {metaData.map((data, index) => (
-            <>
+            <Fragment key={index}>
               {index > 0 && <Divider orientation={"vertical"} flexItem />}
-              <Stack
-                direction={"row"}
-                alignItems={"center"}
-                p={1}
-                spacing={1}
-                key={index}
-              >
+              <Stack direction={"row"} alignItems={"center"} p={1} spacing={1}>
                 {data.icon}
-                <Typography variant={"body1"}>{data.value}</Typography>
+                {showPlaceholder ? (
+                  <Skeleton
+                    variant="text"
+                    width={32}
+                    height={16}
+                    animation="wave"
+                  />
+                ) : (
+                  <Typography variant={"body1"}>{data.value}</Typography>
+                )}
               </Stack>
-            </>
+            </Fragment>
           ))}
         </CardActions>
       </CardActionArea>
-      <ImageDetailModal open={open} onClose={() => setOpen(false)} {...props} />
+      {!showPlaceholder && (
+        <ImageDetailModal
+          open={open}
+          onClose={() => setOpen(false)}
+          {...props}
+        />
+      )}
     </Card>
   );
 };
