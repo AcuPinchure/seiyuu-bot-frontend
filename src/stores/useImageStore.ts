@@ -15,8 +15,8 @@ export interface InputImageQueryOptions {
   maxLikes: string;
   minRTs: string;
   maxRTs: string;
-  minPost: string;
-  maxPost: string;
+  minPosts: string;
+  maxPosts: string;
   tweetID: string;
   page: number;
   orderBy: "date" | "likes" | "rts" | "posts"; // default: date
@@ -59,8 +59,8 @@ const useImageStore = create<ImageStore>((set, get) => ({
     maxLikes: "",
     minRTs: "",
     maxRTs: "",
-    minPost: "",
-    maxPost: "",
+    minPosts: "",
+    maxPosts: "",
     tweetID: "",
     page: 1,
     orderBy: "date",
@@ -90,12 +90,12 @@ const useImageStore = create<ImageStore>((set, get) => ({
             maxRTs: isNaN(parseInt(currQueryOptions.maxRTs))
               ? undefined
               : parseInt(currQueryOptions.maxRTs),
-            minPost: isNaN(parseInt(currQueryOptions.minPost))
+            minPosts: isNaN(parseInt(currQueryOptions.minPosts))
               ? undefined
-              : parseInt(currQueryOptions.minPost),
-            maxPost: isNaN(parseInt(currQueryOptions.maxPost))
+              : parseInt(currQueryOptions.minPosts),
+            maxPosts: isNaN(parseInt(currQueryOptions.maxPosts))
               ? undefined
-              : parseInt(currQueryOptions.maxPost),
+              : parseInt(currQueryOptions.maxPosts),
             page: currQueryOptions.page || undefined,
             orderBy: currQueryOptions.orderBy || undefined,
             order: currQueryOptions.order || undefined,

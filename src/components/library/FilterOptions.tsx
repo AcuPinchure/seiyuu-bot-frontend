@@ -56,9 +56,14 @@ const FilterOptions: React.FC = () => {
       maxLikes: "",
       minRTs: "",
       maxRTs: "",
-      minPost: "",
-      maxPost: "",
+      minPosts: "",
+      maxPosts: "",
     });
+  }
+
+  function handleApply() {
+    setQueryOptions({ page: 1 });
+    getImages();
   }
 
   const startDateMax =
@@ -155,18 +160,18 @@ const FilterOptions: React.FC = () => {
       },
       {
         label: "Min Posts",
-        value: queryOptions.minPost,
-        onChange: (e) => setQueryOptions({ minPost: e.target.value }),
+        value: queryOptions.minPosts,
+        onChange: (e) => setQueryOptions({ minPosts: e.target.value }),
         type: "number",
         min: "0",
-        max: getStringValue(queryOptions.maxPost),
+        max: getStringValue(queryOptions.maxPosts),
       },
       {
         label: "Max Posts",
-        value: queryOptions.maxPost,
-        onChange: (e) => setQueryOptions({ maxPost: e.target.value }),
+        value: queryOptions.maxPosts,
+        onChange: (e) => setQueryOptions({ maxPosts: e.target.value }),
         type: "number",
-        min: getStringValue(queryOptions.minPost) || "0",
+        min: getStringValue(queryOptions.minPosts) || "0",
       },
     ],
   };
@@ -180,7 +185,7 @@ const FilterOptions: React.FC = () => {
     ).length === 0;
 
   return (
-    <FilterWithTrigger onApply={() => getImages()}>
+    <FilterWithTrigger onApply={handleApply}>
       <Tabs
         value={queryOptions.searchType}
         onChange={(_, newValue) => setQueryOptions({ searchType: newValue })}

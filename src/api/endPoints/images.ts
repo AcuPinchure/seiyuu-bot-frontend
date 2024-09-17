@@ -32,8 +32,8 @@ export interface ImageQueryOptions {
   maxLikes?: number;
   minRTs?: number;
   maxRTs?: number;
-  minPost?: number;
-  maxPost?: number;
+  minPosts?: number;
+  maxPosts?: number;
   tweetID?: string;
   page?: number;
   orderBy?: "date" | "likes" | "rts" | "posts"; // default: date
@@ -79,8 +79,8 @@ export async function getImages(
         max_likes: queryOptions.maxLikes,
         min_rts: queryOptions.minRTs,
         max_rts: queryOptions.maxRTs,
-        min_post: queryOptions.minPost,
-        max_post: queryOptions.maxPost,
+        min_posts: queryOptions.minPosts,
+        max_posts: queryOptions.maxPosts,
         tweet_id: queryOptions.tweetID,
         page: queryOptions.page,
         sort_by: queryOptions.orderBy,

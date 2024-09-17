@@ -1,5 +1,6 @@
 import FilterOptions from "@/components/library/FilterOptions";
 import ImageCard from "@/components/library/ImageCard";
+import SortButtonGroup from "@/components/library/SortButtonGroup";
 import useImageStore from "@/stores/useImageStore";
 import {
   Alert,
@@ -34,6 +35,18 @@ const Library: React.FC = () => {
           xl: 4,
         }}
       >
+        {images.count > 1 && (
+          <Grid
+            size={{
+              xs: 1,
+              md: 2,
+              lg: 3,
+              xl: 4,
+            }}
+          >
+            <SortButtonGroup />
+          </Grid>
+        )}
         {isLoading.images ? (
           [...Array(12)].map((_, index) => (
             <Grid key={index} size={1}>
