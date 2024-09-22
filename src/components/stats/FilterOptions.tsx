@@ -18,15 +18,21 @@ const FilterOptions: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { queryOptions, setQueryOptions } = useStatsStore();
+  const { queryOptions, setQueryOptions, getStats, getFollowers } =
+    useStatsStore();
 
   const status = useStatusStore((state) => state.status);
 
-  function handleApply(dateRange: { startDate: string; endDate: string }) {
+  function handleSetOptions(dateRange: { startDate: string; endDate: string }) {
     setQueryOptions({
       startDate: `${dateRange.startDate}T00:00:00+08:00`,
       endDate: `${dateRange.endDate}T23:59:59+08:00`,
     });
+  }
+
+  function handleApply() {
+    getStats();
+    getFollowers();
   }
 
   const dateRange = {
@@ -35,9 +41,9 @@ const FilterOptions: React.FC = () => {
   };
 
   return (
-    <FilterWithTrigger>
-      <Stack direction={isMobile ? "column" : "row"} spacing={2}>
-        <Stack direction={"column"} width={150}>
+    <FilterWithTrigger onApply={handleApply}>
+      <Stack direction={isMobile ? "column" : "row"} spacing={2} mb={1}>
+        <Stack direction={"column"}>
           <Typography variant="h6">Accounts</Typography>
           <List dense disablePadding>
             {status.map((seiyuu) => (
@@ -54,7 +60,7 @@ const FilterOptions: React.FC = () => {
         </Stack>
         <Stack direction={"column"} spacing={2} width={250}>
           <Typography variant="h6">Data Range</Typography>
-          <DateSelector dateRange={dateRange} setDateRange={handleApply} />
+          <DateSelector dateRange={dateRange} setDateRange={handleSetOptions} />
         </Stack>
       </Stack>
     </FilterWithTrigger>

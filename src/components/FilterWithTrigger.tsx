@@ -1,4 +1,12 @@
-import { Box, Button, DialogActions, Fab, Popover } from "@mui/material";
+import {
+  Box,
+  Button,
+  DialogActions,
+  Fab,
+  Popover,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import type { FabProps } from "@mui/material";
 import { useState } from "react";
 import { Funnel } from "@phosphor-icons/react";
@@ -17,6 +25,9 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
   onCancel,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
@@ -53,8 +64,8 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
         {...triggerButtonProps}
         sx={{
           position: "fixed",
-          bottom: "3rem",
-          right: "3rem",
+          bottom: isMobile ? "5vw" : "3rem",
+          right: isMobile ? "5vw" : "3rem",
           zIndex: 100,
         }}
       >

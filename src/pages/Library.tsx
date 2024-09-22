@@ -10,9 +10,21 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const Library: React.FC = () => {
   const { isLoading, images, setQueryOptions, getImages } = useImageStore();
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const tweetID = urlParams.get("tweet_id");
+
+  useEffect(() => {
+    if (tweetID) {
+      setQueryOptions({ tweetID: tweetID, searchType: "tweet" });
+    }
+    getImages();
+  }, [tweetID, getImages, setQueryOptions]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

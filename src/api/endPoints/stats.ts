@@ -4,6 +4,7 @@ import baseRequest from "../axiosInstance";
 import { GeneralResponse } from "./types";
 
 export interface StatsResponse {
+  seiyuu_id: number;
   start_date: string;
   end_date: string;
   interval: number;
@@ -32,6 +33,7 @@ export async function getStats(
   endDate: string
 ): Promise<StatsResponse> {
   const ERROR_RESPONSE = {
+    seiyuu_id: 0,
     start_date: "2020-01-01T00:00:00Z",
     end_date: "2020-01-01T00:00:00Z",
     interval: 0,

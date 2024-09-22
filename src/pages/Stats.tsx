@@ -26,8 +26,7 @@ const Stats: React.FC = () => {
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const { stats, followers, queryOptions, getStats, getFollowers } =
-    useStatsStore();
+  const { stats, followers, getStats, getFollowers } = useStatsStore();
 
   const isLoading = {
     stats: useStatsStore((state) => state.isLoading.stats),
@@ -38,10 +37,10 @@ const Stats: React.FC = () => {
   const { getStatus, status } = useStatusStore();
 
   useEffect(() => {
+    getStatus();
     getStats();
     getFollowers();
-    getStatus();
-  }, [queryOptions, getStats, getFollowers, getStatus]);
+  }, [getStatus, getStats, getFollowers]);
 
   const startDate = format(new Date(stats.start_date), "yyyy-MM-dd HH:mm:ss");
   const endDate = format(new Date(stats.end_date), "yyyy-MM-dd HH:mm:ss");
@@ -49,7 +48,7 @@ const Stats: React.FC = () => {
   const tweetFetchStatus = stats.posts > 0;
   const followerFetchStatus = followers.length > 0;
 
-  const displayedSeiyuu = status.find((s) => s.id === queryOptions.seiyuuID);
+  const displayedSeiyuu = status.find((s) => s.id === stats.seiyuu_id);
 
   const statsData: StatsBlockProps[] = [
     {
@@ -140,7 +139,7 @@ const Stats: React.FC = () => {
         direction={isTablet ? "column" : "row"}
         spacing={2}
         alignItems={"stretch"}
-        width={"calc(100% - var(--mui-spacing) - var(--mui-spacing))"}
+        width={"calc(100% - var(--mui-spacing)"}
       >
         <Stack direction={isTablet && !isMobile ? "row" : "column"} spacing={2}>
           {statsData.map((stat) => (

@@ -18,7 +18,7 @@ import {
   SignOut,
 } from "@phosphor-icons/react";
 import ThemeModeSwitcher from "./ThemeModeSwitcher";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAccountStore from "@/stores/useAccountStore";
 
 interface NaviDrawerProps {
@@ -29,9 +29,17 @@ interface NaviDrawerProps {
 
 const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
   const isAuth = useAccountStore((state) => state.user.id !== 0);
+  const navigate = useNavigate();
 
   const theme = useTheme();
   const isDark = theme.palette.mode === "dark";
+
+  function handleGoto(href: string) {
+    navigate(href);
+    if (isMobile) {
+      setOpen(false);
+    }
+  }
 
   const naviItems = [
     {
@@ -115,7 +123,7 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
           .map((item) => {
             return (
               <ListItem key={item.text} disableGutters disablePadding>
-                <ListItemButton component={Link} to={item.href}>
+                <ListItemButton onClick={() => handleGoto(item.href)}>
                   <Stack
                     direction="row"
                     spacing={2}

@@ -8,6 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { ArrowSquareOut } from "@phosphor-icons/react";
+import { useNavigate } from "react-router-dom";
 import { Tweet } from "react-tweet";
 
 interface LikeDetailProps {
@@ -26,6 +27,7 @@ const LikeDetail: React.FC<LikeDetailProps> = ({
   topTweets,
 }) => {
   const user = useAccountStore((state) => state.user);
+  const navigate = useNavigate();
 
   function handleViewInLibrary(tweetId: string) {
     if (!(user.id > 0)) {
@@ -34,7 +36,7 @@ const LikeDetail: React.FC<LikeDetailProps> = ({
       };
     }
     return () => {
-      console.log(`View in Library: ${tweetId}`);
+      navigate(`/library?tweet_id=${tweetId}`);
     };
   }
 

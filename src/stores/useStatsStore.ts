@@ -25,6 +25,7 @@ const useStatsStore = create<StatsStore>((set, get) => ({
     followers: false,
   },
   stats: {
+    seiyuu_id: 0,
     start_date: "2020-01-01T00:00:00Z",
     end_date: "2020-01-01T00:00:00Z",
     interval: 0,
