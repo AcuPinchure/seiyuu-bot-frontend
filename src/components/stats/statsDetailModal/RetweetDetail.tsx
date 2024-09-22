@@ -8,6 +8,8 @@ import {
   Typography,
 } from "@mui/material";
 import { ArrowSquareOut } from "@phosphor-icons/react";
+import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 import { Tweet } from "react-tweet";
 
 interface RetweetDetailProps {
@@ -26,16 +28,14 @@ const RetweetDetail: React.FC<RetweetDetailProps> = ({
   topTweets,
 }) => {
   const user = useAccountStore((state) => state.user);
+  const navigate = useNavigate();
 
   function handleViewInLibrary(tweetId: string) {
     if (!(user.id > 0)) {
-      return () => {
-        console.log("User not logged in");
-      };
+      enqueueSnackbar("User not logged in", { variant: "error" });
+      return;
     }
-    return () => {
-      console.log(`View in Library: ${tweetId}`);
-    };
+    navigate(`/library?tweet_id=${tweetId}`);
   }
 
   const tableContent = [
@@ -105,7 +105,7 @@ const RetweetDetail: React.FC<RetweetDetailProps> = ({
               </Box>
               {user.id > 0 && (
                 <Button
-                  onClick={handleViewInLibrary(tweetId)}
+                  onClick={() => handleViewInLibrary(tweetId)}
                   endIcon={<ArrowSquareOut />}
                 >
                   View in Library
