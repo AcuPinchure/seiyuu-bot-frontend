@@ -1,10 +1,12 @@
 import useAccountStore from "@/stores/useAccountStore";
+import { clearAxiosCache } from "@/api/axiosInstance";
 
 const Logout: React.FC = () => {
   /* handle logout */
   const logout = useAccountStore((state) => state.logout);
   logout().then(() => {
-    window.location.href = "/";
+    clearAxiosCache();
+    window.location.href = "/stats";
   });
 
   return <>Logging out...</>;

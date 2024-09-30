@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useEffect } from "react";
+import { clearAxiosCache } from "@/api/axiosInstance";
 
 const Login: React.FC = () => {
   const { isLoading, login, user } = useAccountStore();
@@ -23,7 +24,8 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (user.id !== 0) {
-      window.location.href = "/";
+      clearAxiosCache();
+      window.location.href = "/stats";
     }
   }, [user.id]);
 

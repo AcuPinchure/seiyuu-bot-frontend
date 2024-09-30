@@ -180,8 +180,7 @@ const DateOptions: React.FC<DateOptionsProps> = ({
             )}
           </Stack>
           <Button
-            variant="contained"
-            color="secondary"
+            color="primary"
             startIcon={<ArrowClockwise />}
             sx={{ px: "1rem" }}
             onClick={handleReset}
@@ -194,7 +193,7 @@ const DateOptions: React.FC<DateOptionsProps> = ({
           maxDate={new Date()}
           minDate={new Date("2020-01-01")}
           months={isTablet ? 1 : 2}
-          ranges={[selectedRange]}
+          ranges={[{ ...selectedRange }]}
           onChange={handleChangeDate}
           direction={"horizontal"}
           rangeColors={[theme.palette.primary.main]}
@@ -204,8 +203,7 @@ const DateOptions: React.FC<DateOptionsProps> = ({
         />
         <Stack direction={"row"} justifyContent={"right"} spacing={1} p={1}>
           <Button
-            variant="contained"
-            color="secondary"
+            color="primary"
             onClick={() => setAnchorEl(null)}
             sx={{ px: "2rem" }}
           >

@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: "",
+        path: "stats",
 
         element: (
           <SuspenseWrapper>
@@ -52,7 +52,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "logs",
+        path: "logs/*",
         element: (
           <SuspenseWrapper>
             <Logs />

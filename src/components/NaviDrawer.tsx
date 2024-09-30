@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
   useTheme,
+  TypographyProps,
 } from "@mui/material";
 import {
   CaretRight,
@@ -14,11 +15,12 @@ import {
   Clock,
   Gauge,
   Images,
+  Info,
   SignIn,
   SignOut,
 } from "@phosphor-icons/react";
 import ThemeModeSwitcher from "./ThemeModeSwitcher";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAccountStore from "@/stores/useAccountStore";
 
 interface NaviDrawerProps {
@@ -27,8 +29,18 @@ interface NaviDrawerProps {
   isMobile: boolean;
 }
 
+interface NaviItem {
+  icon: JSX.Element;
+  text: string;
+  showInLogout: boolean;
+  showInLogin: boolean;
+  href: string;
+  typographyProps?: TypographyProps;
+}
+
 const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
   const isAuth = useAccountStore((state) => state.user.id !== 0);
+  const location = useLocation();
   const navigate = useNavigate();
 
   const theme = useTheme();
@@ -41,13 +53,13 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
     }
   }
 
-  const naviItems = [
+  const naviItems: NaviItem[] = [
     {
       icon: <ChartLine weight="bold" size={20} />,
       text: "Statistics",
       showInLogout: true,
       showInLogin: true,
-      href: "/",
+      href: "/stats",
     },
     {
       icon: <Gauge weight="bold" size={20} />,
@@ -118,12 +130,33 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
             </Box>
           </ListItemButton>
         </ListItem>
+        <ListItem disableGutters disablePadding>
+          <ListItemButton
+            href="https://acupinchure.com/seiyuu-bot"
+            target="_blank"
+          >
+            <Stack
+              direction="row"
+              spacing={2}
+              alignItems={"center"}
+              height={52}
+            >
+              <Info weight="bold" size={20} />
+              {(isMobile || open) && (
+                <Typography variant="body1">Project Info</Typography>
+              )}
+            </Stack>
+          </ListItemButton>
+        </ListItem>
         {naviItems
           .filter((item) => (isAuth ? item.showInLogin : item.showInLogout))
           .map((item) => {
             return (
               <ListItem key={item.text} disableGutters disablePadding>
-                <ListItemButton onClick={() => handleGoto(item.href)}>
+                <ListItemButton
+                  onClick={() => handleGoto(item.href)}
+                  selected={location.pathname.startsWith(item.href)}
+                >
                   <Stack
                     direction="row"
                     spacing={2}
@@ -132,7 +165,9 @@ const NaviDrawer: React.FC<NaviDrawerProps> = ({ open, setOpen, isMobile }) => {
                   >
                     {item.icon}
                     {(isMobile || open) && (
-                      <Typography variant="body1">{item.text}</Typography>
+                      <Typography variant="body1" {...item.typographyProps}>
+                        {item.text}
+                      </Typography>
                     )}
                   </Stack>
                 </ListItemButton>

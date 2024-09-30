@@ -15,5 +15,16 @@ const baseRequest = setupCache(
   }
 );
 
+function clearAxiosCache() {
+  let i = 0;
+  while (sessionStorage.key(i) !== null) {
+    if (sessionStorage.key(i)?.startsWith("axios-cache:")) {
+      sessionStorage.removeItem(sessionStorage.key(0) || "");
+    } else {
+      i++;
+    }
+  }
+}
+
 export default baseRequest;
-export { BASE_URL };
+export { BASE_URL, clearAxiosCache };
