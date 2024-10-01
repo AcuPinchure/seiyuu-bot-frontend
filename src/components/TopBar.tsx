@@ -10,10 +10,10 @@ interface TopBarProps {
 const TopBar: React.FC<TopBarProps> = ({ setNaviOpen, isMobile }) => {
   const location = useLocation();
 
-  let title = "App";
+  let title = "Lovelive Seiyuu Bot";
 
   switch (location.pathname.split("/")[1]) {
-    case "":
+    case "stats":
       title = "Statistics";
       break;
     case "status":

@@ -39,20 +39,17 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
 }) => {
   const [openModal, setOpenModal] = useState(false);
 
-  const content = status ? (
+  const content = loading ? (
     <>
-      {loading ? (
-        <Skeleton variant="text" width={100} height={56} animation="wave" />
-      ) : (
-        <Typography variant="h3">{value}</Typography>
-      )}
-      {loading ? (
-        <Skeleton variant="text" width={100} height={20} animation="wave" />
-      ) : (
-        <Typography variant="body1" sx={{ opacity: 0.5 }}>
-          {subtitle}
-        </Typography>
-      )}
+      <Skeleton variant="text" width={100} height={56} animation="wave" />
+      <Skeleton variant="text" width={100} height={20} animation="wave" />
+    </>
+  ) : status ? (
+    <>
+      <Typography variant="h3">{value}</Typography>
+      <Typography variant="body1" sx={{ opacity: 0.5 }}>
+        {subtitle}
+      </Typography>
     </>
   ) : (
     <Alert

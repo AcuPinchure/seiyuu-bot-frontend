@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import NaviDrawer from "@/components/NaviDrawer";
 import { useEffect, useState } from "react";
 import TopBar from "@/components/TopBar";
@@ -6,10 +6,19 @@ import { Box, Container, useMediaQuery, useTheme } from "@mui/material";
 import useAccountStore from "@/stores/useAccountStore";
 
 const Layout: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const testLogin = useAccountStore((state) => state.testLogin);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/stats");
+    }
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
     testLogin();
@@ -29,7 +38,7 @@ const Layout: React.FC = () => {
       >
         <Container maxWidth="xl">
           <TopBar setNaviOpen={setDrawerOpen} isMobile={isMobile} />
-          <Box mt={1}>
+          <Box mt={1} mb={2}>
             <Outlet />
           </Box>
         </Container>

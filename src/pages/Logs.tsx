@@ -64,6 +64,8 @@ const Logs: React.FC = () => {
     _: React.MouseEvent<HTMLElement>,
     value: "backend" | "crawler"
   ) {
+    if (!value || value === logData.logType) return;
+
     setLogData((prev) => ({ ...prev, logType: value }));
     navigate(`/logs`);
   }

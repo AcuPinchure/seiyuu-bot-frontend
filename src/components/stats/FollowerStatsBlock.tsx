@@ -39,61 +39,54 @@ const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
           (1000 * 60 * 60 * 24))
       : 0;
 
-  const content = status ? (
+  const content = loading ? (
     <>
-      {loading ? (
-        <Skeleton variant="text" width={100} height={56} animation="wave" />
-      ) : (
-        <Typography variant="h3">
-          {lastestData?.followers?.toLocaleString("en-US")}
-        </Typography>
-      )}
-      {loading ? (
-        <Skeleton variant="text" width={100} height={20} animation="wave" />
-      ) : (
-        <Typography variant="body1" sx={{ opacity: 0.5 }}>
-          {`${avgGrowth.toFixed(2)} new followers per day`}
-        </Typography>
-      )}
-      {loading ? (
-        <Skeleton variant="rectangular" height={300} animation="wave" />
-      ) : (
-        <Box sx={{ filter: isDark ? "invert(0.9)" : undefined }} pt={1}>
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={{
+      <Skeleton variant="text" width={100} height={56} animation="wave" />
+      <Skeleton variant="text" width={100} height={20} animation="wave" />
+    </>
+  ) : status ? (
+    <>
+      <Typography variant="h3">
+        {lastestData?.followers?.toLocaleString("en-US")}
+      </Typography>
+      <Typography variant="body1" sx={{ opacity: 0.5 }}>
+        {`${avgGrowth.toFixed(2)} new followers per day`}
+      </Typography>
+      <Box sx={{ filter: isDark ? "invert(0.9)" : undefined }} pt={1}>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={{
+            title: {
+              text: "Follower Growth",
+            },
+            series: [
+              {
+                name: "Followers",
+                data: data.map((d) => [
+                  new Date(d.data_time).getTime(),
+                  d.followers,
+                ]),
+              },
+            ],
+            xAxis: {
+              type: "datetime",
+            },
+            yAxis: {
               title: {
-                text: "Follower Growth",
+                text: "Followers",
               },
-              series: [
-                {
-                  name: "Followers",
-                  data: data.map((d) => [
-                    new Date(d.data_time).getTime(),
-                    d.followers,
-                  ]),
-                },
-              ],
-              xAxis: {
-                type: "datetime",
+            },
+            legend: {
+              enabled: false, // Hides the legend
+            },
+            chart: {
+              scrollablePlotArea: {
+                minWidth: 500,
               },
-              yAxis: {
-                title: {
-                  text: "Followers",
-                },
-              },
-              legend: {
-                enabled: false, // Hides the legend
-              },
-              chart: {
-                scrollablePlotArea: {
-                  minWidth: 500,
-                },
-              },
-            }}
-          />
-        </Box>
-      )}
+            },
+          }}
+        />
+      </Box>
     </>
   ) : (
     <Alert severity="error" variant="outlined" sx={{ justifySelf: "center" }}>
