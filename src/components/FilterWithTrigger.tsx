@@ -1,7 +1,9 @@
 import {
   Box,
   Button,
+  Dialog,
   DialogActions,
+  DialogContent,
   Fab,
   Popover,
   useMediaQuery,
@@ -10,6 +12,7 @@ import {
 import type { FabProps } from "@mui/material";
 import { useState } from "react";
 import { Funnel } from "@phosphor-icons/react";
+import DialogTransition from "./DialogTransition";
 
 interface FilterWithTriggerProps {
   triggerButtonProps?: Omit<FabProps, "onClick">;
@@ -27,7 +30,7 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     setAnchorEl(event.currentTarget);
@@ -54,6 +57,62 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
   const open = Boolean(anchorEl);
   const id = open ? "filter-options" : undefined;
 
+  const desktopContent = (
+    <Popover
+      id={id}
+      open={open}
+      anchorEl={anchorEl}
+      onClose={handleClose}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "bottom",
+        horizontal: "right",
+      }}
+      disableScrollLock
+      slotProps={{
+        paper: {
+          sx: {
+            padding: 2,
+            overflow: "hidden",
+          },
+        },
+      }}
+    >
+      {children}
+      <DialogActions sx={{ marginX: -2, marginBottom: -2 }}>
+        <Button onClick={handleCancel}>Close</Button>
+        {onApply && (
+          <Button variant="contained" onClick={handleApply}>
+            Apply
+          </Button>
+        )}
+      </DialogActions>
+    </Popover>
+  );
+
+  const mobileContent = (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullScreen
+      TransitionComponent={DialogTransition}
+      disableScrollLock
+    >
+      <DialogContent>{children}</DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancel}>Close</Button>
+        {onApply && (
+          <Button variant="contained" onClick={handleApply}>
+            Apply
+          </Button>
+        )}
+      </DialogActions>
+    </Dialog>
+  );
+
   return (
     <>
       <Box height={"8rem"} />
@@ -71,39 +130,7 @@ const FilterWithTrigger: React.FC<FilterWithTriggerProps> = ({
       >
         <Funnel size={24} />
       </Fab>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        disableScrollLock
-        slotProps={{
-          paper: {
-            sx: {
-              padding: 2,
-              overflow: "hidden",
-            },
-          },
-        }}
-      >
-        {children}
-        <DialogActions sx={{ marginX: -2, marginBottom: -2 }}>
-          <Button onClick={handleCancel}>Close</Button>
-          {onApply && (
-            <Button variant="contained" onClick={handleApply}>
-              Apply
-            </Button>
-          )}
-        </DialogActions>
-      </Popover>
+      {isMobile ? mobileContent : desktopContent}
     </>
   );
 };

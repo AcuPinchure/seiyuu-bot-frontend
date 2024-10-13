@@ -9,8 +9,10 @@ import {
   Skeleton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
+import DialogTransition from "../DialogTransition";
 
 export interface StatsBlockProps {
   loading?: boolean;
@@ -38,6 +40,8 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
   status,
 }) => {
   const [openModal, setOpenModal] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width: 500px)");
 
   const content = loading ? (
     <>
@@ -94,7 +98,9 @@ const StatsBlock: React.FC<StatsBlockProps> = ({
           scroll="paper"
           maxWidth={modalMaxWidth}
           fullWidth={modalFullWidth}
+          fullScreen={isMobile}
           disableScrollLock
+          TransitionComponent={isMobile ? DialogTransition : undefined}
         >
           {detailModalTitle && <DialogTitle>{detailModalTitle}</DialogTitle>}
           <DialogContent>{detailModalContent}</DialogContent>

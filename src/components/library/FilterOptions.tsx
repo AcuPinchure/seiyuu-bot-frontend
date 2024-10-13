@@ -12,6 +12,8 @@ import {
   Tab,
   Tabs,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import format from "date-fns/format";
 import { useEffect } from "react";
@@ -42,6 +44,9 @@ const FilterOptions: React.FC = () => {
   const { queryOptions, setQueryOptions, getImages } = useImageStore();
 
   const { status, getStatus } = useStatusStore();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     getStatus();
@@ -196,8 +201,8 @@ const FilterOptions: React.FC = () => {
       </Tabs>
       <Stack
         direction={"column"}
-        height={"70vh"}
-        width={250}
+        height={isMobile ? undefined : "70vh"}
+        width={isMobile ? undefined : 250}
         sx={{ overflowY: "auto" }}
         p={2}
         mx={-2}

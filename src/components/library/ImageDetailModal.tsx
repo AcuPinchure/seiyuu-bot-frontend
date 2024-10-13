@@ -26,6 +26,7 @@ import { getImageTweet } from "@/api/endPoints/images";
 import type { ImageTweetResponse } from "@/api/endPoints/images";
 import format from "date-fns/format";
 import { BASE_URL } from "@/api/axiosInstance";
+import DialogTransition from "../DialogTransition";
 
 interface ImageDetailModalProps {
   open: boolean;
@@ -121,6 +122,8 @@ const ImageDetailModal: React.FC<ImageDetailModalProps & ImageCardProps> = ({
       maxWidth="md"
       fullWidth
       disableScrollLock
+      fullScreen={isTablet}
+      TransitionComponent={isTablet ? DialogTransition : undefined}
     >
       <DialogTitle>{fileName}</DialogTitle>
       <DialogContent>
