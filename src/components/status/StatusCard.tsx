@@ -1,3 +1,4 @@
+import { clearAxiosCache } from "@/api/axiosInstance";
 import useStatusStore from "@/stores/useStatusStore";
 import { LoadingButton } from "@mui/lab";
 import {
@@ -54,6 +55,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
 
   async function handleSave() {
     await updateStatus(idName, editData.isActive, editData.interval);
+    clearAxiosCache();
     setEdit(false);
   }
 

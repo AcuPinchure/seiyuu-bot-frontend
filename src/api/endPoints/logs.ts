@@ -36,6 +36,7 @@ export async function listLogs(
         max_date,
         page,
       },
+      cache: false,
     });
 
     return response.data;
