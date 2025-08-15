@@ -1,5 +1,5 @@
-import LogDetailView from "@/components/viewLogs/logDetailView";
-import LogListView from "@/components/viewLogs/logListView";
+import LogDetailView from "@/components/viewLogs/LogDetailView";
+import LogListView from "@/components/viewLogs/LogListView";
 import useLogStore from "@/stores/useLogStore";
 import {
   Box,
