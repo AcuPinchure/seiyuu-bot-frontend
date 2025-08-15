@@ -59,6 +59,10 @@ const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
             title: {
               text: "Follower Growth",
             },
+            tooltip: {
+              xDateFormat: "%Y-%m-%d %H:%M",
+              shared: true,
+            },
             series: [
               {
                 name: "Followers",
@@ -70,6 +74,14 @@ const FollowerStatsBlock: React.FC<FollowerStatsBlockProps> = ({
             ],
             xAxis: {
               type: "datetime",
+              labels: {
+                format: "{value:%Y-%m-%d %H:%M}",
+              },
+              dateTimeLabelFormats: {
+                minute: "%Y-%m-%d %H:%M",
+                hour: "%Y-%m-%d %H:%M",
+                day: "%Y-%m-%d %H:%M",
+              },
             },
             yAxis: {
               title: {
